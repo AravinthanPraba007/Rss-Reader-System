@@ -1,11 +1,12 @@
-const User = require('../LocalModels/user');
-const db = require("../Models/index");
-const UserModel = db.userModel;
+// const LocalUserModel = require('../LocalModels/user');
+// const db = require("../DbModels/index");
+// const UserModel = db.userModel;
 const JwtTokenHelper = require('../Helpers/jwtTokenHelper');
+const {User} = require('../../models');
 
 async function findByCredentials(userData) {
         try {
-            let user = await UserModel.findAll({
+            let user = await User.findAll({
                 where: {
                     email: userData.email.toLowerCase()
                 }
@@ -17,7 +18,7 @@ async function findByCredentials(userData) {
                 })
             }
             userValue = user[0].dataValues;
-            if (user && User.authenticate(userValue.password, userData.password)) {
+            if (user && authenticate(userValue.password, userData.password)) {
                 return ({
                     statusCode: 200,
                     message: 'Successfully logged-in',
@@ -54,9 +55,13 @@ module.exports.loginUser = async (userData) => {
 
 function loginJwtToken(user) {
     let obj = {
-        userId : user.id,
+        userId : user.uuid,
         email : user.email
     }
     let jwtToken = JwtTokenHelper.tokenGenerator(obj, '1 day');
     return jwtToken;
+}
+
+function authenticate(userPassword, requestPassword) {
+    return userPassword === requestPassword;
 }
