@@ -6,23 +6,23 @@ const {User} = require('../../models');
 
 async function findByCredentials(userData) {
         try {
-            let user = await User.findAll({
+            let user = await User.findOne({
                 where: {
                     email: userData.email.toLowerCase()
                 }
-            })
+            });
+            console.log(user);
             if(user && user.length === 0){
                 return ({
                     statusCode: 401,
                     message: 'Invalid Email Id provided'
                 })
             }
-            userValue = user[0].dataValues;
-            if (user && authenticate(userValue.password, userData.password)) {
+            if (user && authenticate(user.dataValues.password, userData.password)) {
                 return ({
                     statusCode: 200,
                     message: 'Successfully logged-in',
-                    user: userValue
+                    user: user.dataValues
                 });
             }
             else {

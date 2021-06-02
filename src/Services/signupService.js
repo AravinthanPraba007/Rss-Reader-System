@@ -7,15 +7,16 @@ const {User} = require('../../models');
 
 async function isUserAlreadyExist(email) {
     try {
-        let user = await User.findAll({
+        let user = await User.findOne({
             where: {
                 email: email.toLowerCase()
             }
         });
-        if (user && user.length === 0) {
-            return false;
+        console.log(user);
+        if (user) {
+            return true;
         }
-        return true;
+        return false;
     } catch (error) {
         return error;
     }
@@ -40,8 +41,7 @@ module.exports.signUpUser = async (userData) => {
         }
 };
 
-function signUpJwtToken(user) {
-    console.log(user);
+function signUpJwtToken(user) {;
     let obj = {
         userId: user.uuid,
         email: user.email
