@@ -18,7 +18,10 @@ server.connection({
     
     await server.start();
     console.log(`Server running at: ${server.info.uri}`);
+
   };
+
+  
 
   process.on('unhandledRejection', (err) => {
     console.log(err);

@@ -1,20 +1,27 @@
 const User = require('../LocalModels/user');
+const db = require("../Models/index");
+const UserModel = db.userModel;
 const JwtTokenHelper = require('../Helpers/jwtTokenHelper');
 
 async function findByCredentials(userData) {
         try {
-            let user = await User.findEmailId(userData.email);
-            if(!user){
+            let user = await UserModel.findAll({
+                where: {
+                    email: userData.email.toLowerCase()
+                }
+            })
+            if(user && user.length === 0){
                 return ({
                     statusCode: 401,
                     message: 'Invalid Email Id provided'
                 })
             }
-            if (user && User.authenticate(user.password, userData.password)) {
+            userValue = user[0].dataValues;
+            if (user && User.authenticate(userValue.password, userData.password)) {
                 return ({
                     statusCode: 200,
                     message: 'Successfully logged-in',
-                    user: user
+                    user: userValue
                 });
             }
             else {
@@ -47,9 +54,9 @@ module.exports.loginUser = async (userData) => {
 
 function loginJwtToken(user) {
     let obj = {
-        userId : user.user_id,
+        userId : user.id,
         email : user.email
     }
-    let jwtToken = JwtTokenHelper.tokenGenerator(obj,'1 day');
+    let jwtToken = JwtTokenHelper.tokenGenerator(obj, '1 day');
     return jwtToken;
 }
