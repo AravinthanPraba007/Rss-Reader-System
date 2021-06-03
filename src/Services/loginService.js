@@ -4,6 +4,10 @@
 const JwtTokenHelper = require('../Helpers/jwtTokenHelper');
 const {User} = require('../../models');
 const bcrypt = require('bcrypt');
+const StatusMessage = require('../Constants/statusMessages');
+const StatusCode = require('../Constants/statusCode');
+const statusCode = require('../Constants/statusCode');
+
 
 async function findByCredentials(userData) {
         try {
@@ -14,21 +18,21 @@ async function findByCredentials(userData) {
             });
             if(!user){
                 return ({
-                    statusCode: 401,
-                    message: 'Invalid Email Id provided'
+                    statusCode: StatusCode.Unauthorized,
+                    message: StatusMessage.Login_Invalid_Email_Message
                 })
             }
             if (user && await authenticate(userData.password, user.dataValues.password)) {
                 return ({
-                    statusCode: 200,
-                    message: 'Successfully logged-in',
+                    statusCode: StatusCode.Success,
+                    message: StatusMessage.Login_Success_Messages,
                     user: user.dataValues
                 });
             }
             else {
                 return ({
-                    statusCode: 401,
-                    message: 'Invalid password'
+                    statusCode: StatusCode.Unauthorized,
+                    message: StatusMessage.Login_Invalid_Password_Message
                 })
             }
         } catch (error) {
@@ -40,7 +44,7 @@ async function findByCredentials(userData) {
 module.exports.loginUser = async (userData) => {
     try {
         let data = await findByCredentials(userData);
-        if (data.statusCode === 200) {
+        if (data.statusCode === StatusCode.Success) {
             let jwtToken = loginJwtToken(data.user);
             var response = { message : data.message, statusCode: data.statusCode, jwtToken: jwtToken };
             return response;

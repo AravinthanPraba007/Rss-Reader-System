@@ -5,7 +5,8 @@
 const JwtTokenHelper = require('../Helpers/jwtTokenHelper');
 const {User} = require('../../models');
 const bcrypt = require('bcrypt');
-const saltRound = 10;
+const StatusMessage = require('../Constants/statusMessages');
+const StatusCode = require('../Constants/statusCode');
 
 async function isUserAlreadyExist(email) {
     try {
@@ -14,7 +15,6 @@ async function isUserAlreadyExist(email) {
                 email: email.toLowerCase()
             }
         });
-        console.log(user);
         if (user) {
             return true;
         }
@@ -30,13 +30,14 @@ module.exports.signUpUser = async (userData) => {
         try {
             let data = await isUserAlreadyExist(userData.email);
             if (data) {
-                let response = { statusCode: 409, message: 'User already exist' };
+                let response = { statusCode: StatusCode.Conflict, message: StatusMessage.Signup_Already_User_Exist_Message };
                 return response;
             } else {
+                const saltRound = 10;
                 const hashPassword = await bcrypt.hash(userData.password, saltRound);
                 let savedUser = await User.create({name: userData.name, email: userData.email, password: hashPassword});
                 let jwtToken = signUpJwtToken(savedUser.dataValues);
-                let response = { statusCode: 201, message: 'Sign up successfully', jwtToken: jwtToken };
+                let response = { statusCode: StatusCode.Created, message: StatusMessage.Signup_Success_Message, jwtToken: jwtToken };
                 return response;
             }
         } catch (error) {

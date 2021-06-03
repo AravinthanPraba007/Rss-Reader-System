@@ -21,7 +21,6 @@ module.exports.userLogin =  async (user, reply) => {
                 response.header('Authorization', data.jwtToken);
                 return response;
             } else {
-                console.log(data)
                 return reply({ message: data.message}).code(data.statusCode);  
             } 
 }
