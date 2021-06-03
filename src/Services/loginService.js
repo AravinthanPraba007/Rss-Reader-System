@@ -3,6 +3,7 @@
 // const UserModel = db.userModel;
 const JwtTokenHelper = require('../Helpers/jwtTokenHelper');
 const {User} = require('../../models');
+const bcrypt = require('bcrypt');
 
 async function findByCredentials(userData) {
         try {
@@ -11,14 +12,13 @@ async function findByCredentials(userData) {
                     email: userData.email.toLowerCase()
                 }
             });
-            console.log(user);
-            if(user && user.length === 0){
+            if(!user){
                 return ({
                     statusCode: 401,
                     message: 'Invalid Email Id provided'
                 })
             }
-            if (user && authenticate(user.dataValues.password, userData.password)) {
+            if (user && await authenticate(userData.password, user.dataValues.password)) {
                 return ({
                     statusCode: 200,
                     message: 'Successfully logged-in',
@@ -62,6 +62,7 @@ function loginJwtToken(user) {
     return jwtToken;
 }
 
-function authenticate(userPassword, requestPassword) {
-    return userPassword === requestPassword;
+async function authenticate(loginPassword, hashPassword) {
+    const result = await bcrypt.compare(loginPassword, hashPassword);
+    return result;
 }
