@@ -43,7 +43,7 @@ module.exports.signUpUser = async (userData) => {
 
 function signUpJwtToken(user) {;
     let obj = {
-        userId: user.uuid,
+        userId: user.id,
         email: user.email
     }
     let jwtToken = JwtTokenHelper.tokenGenerator(obj, '1 day');

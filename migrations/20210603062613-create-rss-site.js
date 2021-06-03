@@ -1,26 +1,14 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, DataTypes) => {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('rss_site', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      uuid: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      password: {
+      url: {
         type: DataTypes.STRING,
         allowNull: false
       },
@@ -35,6 +23,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, DataTypes) => {
-    await queryInterface.dropTable('user');
+    await queryInterface.dropTable('rss_site');
   }
 };

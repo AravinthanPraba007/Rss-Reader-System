@@ -55,7 +55,7 @@ module.exports.loginUser = async (userData) => {
 
 function loginJwtToken(user) {
     let obj = {
-        userId : user.uuid,
+        userId : user.id,
         email : user.email
     }
     let jwtToken = JwtTokenHelper.tokenGenerator(obj, '1 day');
