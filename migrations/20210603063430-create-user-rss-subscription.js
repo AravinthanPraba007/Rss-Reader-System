@@ -1,10 +1,7 @@
 'use strict';
-
-const { DataTypes } = require("sequelize/types");
-
 module.exports = {
   up: async (queryInterface, DataTypes) => {
-    await queryInterface.createTable('UserRssSubscriptions', {
+    await queryInterface.createTable('user_rss_subscription', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,11 +9,19 @@ module.exports = {
         type: DataTypes.INTEGER
       },
       active: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       },
-      rssId: {
-        type: DataTypes.STRING,
-        allowNull: false
+      rss_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: { model: 'rss_site', key: 'id' }
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: { model: 'user', key: 'id' }
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +34,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, DataTypes) => {
-    await queryInterface.dropTable('UserRssSubscriptions');
+    await queryInterface.dropTable('user_rss_subscription');
   }
 };

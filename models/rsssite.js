@@ -11,13 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ UserRssSubscription }) {
       // define association here
-      this.hasMany(UserRssSubscription, { foreignKey: 'rssId'})
+      this.hasMany(UserRssSubscription, { foreignKey: 'rss_id'});
     }
   };
   RssSite.init({
     url: DataTypes.STRING
   }, {
     sequelize,
+    tableName: 'rss_site',
     modelName: 'RssSite',
   });
   return RssSite;

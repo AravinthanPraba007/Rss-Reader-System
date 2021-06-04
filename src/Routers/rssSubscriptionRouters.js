@@ -3,12 +3,13 @@ const RssSubscriptionController = require('../Controllers/rssSubscriptionControl
 module.exports = [
     {
         method: 'post',
-        path: '/rssSubscription',
+        path: '/addRssSubscription',
         
         config: {
             validate: {
                 payload: Joi.object({
-                    rssFeedUrl: Joi.string().uri().required()
+                    rssFeedUrl: Joi.string().uri().required(),
+                    userId: Joi.number()
                 })
             },
             handler: async (request, reply) => {

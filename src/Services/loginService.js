@@ -6,7 +6,6 @@ const {User} = require('../../models');
 const bcrypt = require('bcrypt');
 const StatusMessage = require('../Constants/statusMessages');
 const StatusCode = require('../Constants/statusCode');
-const statusCode = require('../Constants/statusCode');
 
 
 async function findByCredentials(userData) {
