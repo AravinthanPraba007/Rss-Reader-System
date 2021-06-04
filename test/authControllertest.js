@@ -1,6 +1,6 @@
 var assert = require('chai').assert;
 const Hapi = require('hapi');
-const AuthRouters = require('../src/Routers/auth-routers');
+const AuthRouters = require('../src/Routers/authRouters');
 const StatusMessage = require('../src/Constants/statusMessages');
 const StatusCode = require('../src/Constants/statusCode');
 const { User } = require('../models');

@@ -20,6 +20,7 @@
   "homepage": "https://github.com/AravinthanPraba007/Rss-Reader-System#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "davefeedread": "^0.5.14",
     "hapi": "^16.1.0",
     "joi": "^10.2.2",
     "jsonwebtoken": "^8.5.1",

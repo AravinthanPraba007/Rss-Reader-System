@@ -1,5 +1,6 @@
 const Hapi = require('hapi');
-const AuthRouters = require('../Routers/auth-routers');
+const AuthRouters = require('../Routers/authRouters');
+const RssSubscriptionRouters = require('../Routers/rssSubscriptionRouters');
 const server = new Hapi.Server();
 
 // Configure the server to start the host and port
@@ -12,6 +13,11 @@ server.connection({
     
     // server.route([...AuthRouters]);
     AuthRouters.forEach((route) => {
+      console.log(`Adding the end point: ${route.path}`);
+      server.route(route);
+    })
+
+    RssSubscriptionRouters.forEach((route) => {
       console.log(`Adding the end point: ${route.path}`);
       server.route(route);
     })
