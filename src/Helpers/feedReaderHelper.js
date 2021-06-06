@@ -13,7 +13,6 @@ module.exports.parseExample = async (rssFeedUrl) => {
                 resolve(errorResponse);
                 }
             else {
-                console.log(theFeed.head);
                 const sucessResponse = {
                     statusCode: 200,
                     content: theFeed

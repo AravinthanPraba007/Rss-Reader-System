@@ -15,7 +15,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   RssSite.init({
-    url: DataTypes.STRING
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    title: {
+      type: DataTypes.STRING
+    },
+    description: {
+      type: DataTypes.STRING
+    },
+    siteLink: {
+      type: DataTypes.STRING
+    },
+    imageUrl: {
+      type: DataTypes.STRING
+    },
   }, {
     sequelize,
     tableName: 'rss_site',

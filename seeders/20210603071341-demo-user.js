@@ -16,7 +16,7 @@ module.exports = {
        uuid: '5ce9d5ae-de7d-485c-9997-347b25bed186',
        name: 'John',
        email: 'john@gmail.com',
-       password: 'findme',
+       password: '$2b$10$.EyZix4Q1mLyPFYNNJLE1ecKQlzR8UrvVFPwRPVnUzatsBgUxY0Iu',
        createdAt: '2021-06-02 23:22:28.405+05:30',
        updatedAt: '2021-06-02 23:22:28.405+05:30'
      },
@@ -24,7 +24,7 @@ module.exports = {
       uuid: '35aef859-f93f-4914-b5e0-3ab4cabf42d4',
       name: 'Ramu',
       email: 'ramu@gmail.com',
-      password: 'findme',
+      password: '$2b$10$.EyZix4Q1mLyPFYNNJLE1ecKQlzR8UrvVFPwRPVnUzatsBgUxY0Iu',
       createdAt: '2021-06-02 23:22:28.405+05:30',
       updatedAt: '2021-06-02 23:22:28.405+05:30'
      }
