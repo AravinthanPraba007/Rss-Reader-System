@@ -65,7 +65,6 @@ module.exports.addRssSubcription = async (userData) => {
         let isUserAlreadySubscribed = await isUserAlreadySubscribedRss(userData.userId, rssSiteId);
         if (!isUserAlreadySubscribed) {
             let savedSubscription = await UserRssSubscription.create({ rss_id: rssSiteId, user_id: userData.userId });
-            console.log((savedSubscription));
             let response = { message: StatusMessage.Add_Rss_Subscription_Success_Message, statusCode: 200 };
             return response;
         }

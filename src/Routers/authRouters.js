@@ -6,6 +6,7 @@ module.exports = [
         path: '/signup',
         
         config: {
+            auth: false,
             validate: {
                 payload: Joi.object({
                     name: Joi.string().required(),
@@ -23,6 +24,7 @@ module.exports = [
         method: 'post',
         path: '/login',
         config: {
+            auth: false,
             validate: {
                 payload: Joi.object({
                         email: Joi.string().email().required(),

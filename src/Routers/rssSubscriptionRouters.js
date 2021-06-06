@@ -6,32 +6,27 @@ module.exports = [
         path: '/addRssSubscription',
         
         config: {
+            auth: 'jwt',
             validate: {
                 payload: Joi.object({
-                    rssFeedUrl: Joi.string().uri().required(),
-                    userId: Joi.number()
+                    rssFeedUrl: Joi.string().uri().required()
                 })
             },
             handler: async (request, reply) => {
-                return RssSubscriptionController.AddRssSubscription(request.payload, reply);
+                return RssSubscriptionController.AddRssSubscription(request, reply);
             }
         }
     },
     {
         method: 'GET',
-        path: '/getRssSubscriptionList/{userId}',
+        path: '/getRssSubscriptionList',
         
         config: {
+            auth: 'jwt',
             validate: {
-                params: {
-                    userId: Joi.number()
-                }
             },
             handler: async (request, reply) => {
-                const user = {
-                    userId : request.params.userId
-                }
-                return RssSubscriptionController.GetRssSubscriptionList(user, reply);
+                return RssSubscriptionController.GetRssSubscriptionList(request, reply);
             }
         }
     }
