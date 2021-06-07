@@ -2,7 +2,6 @@
 const FeedParser = require('../Helpers/feedReaderHelper');
 const { User, RssSite, UserRssSubscription } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
-const StatusCode = require('../Constants/statusCode');
 
 const FeedParser2 = require('../Helpers/feedReaderHelper2');
 
@@ -15,11 +14,14 @@ module.exports.addRssSubcription = async (userData) => {
     */
     try {
         let rssFetchData;
+        let response  = {
+            isSubscriptionSuccess : false
+        }
         let rssIdAlreadyExist = await isRssUrlExist(userData.rssFeedUrl);
         let rssSiteId;
         if (!rssIdAlreadyExist) {
-            rssFetchData = await FeedParser.parseExample(userData.rssFeedUrl);
-            if (rssFetchData.statusCode && rssFetchData.statusCode === StatusCode.Success) {
+            rssFetchData = await FeedParser.rssParser(userData.rssFeedUrl);
+            if (rssFetchData.statusCode && rssFetchData.statusCode === 200) {
                 let newRssDetails = {};
                 newRssDetails.rssFeedUrl = userData.rssFeedUrl;
                 if (rssFetchData.content && rssFetchData.content.head) {
@@ -42,7 +44,7 @@ module.exports.addRssSubcription = async (userData) => {
                 rssSiteId = savedRssSite.dataValues.id;
             }
             else {
-                let response = { message: rssFetchData.errorMessage, statusCode: StatusCode.NotFound };
+                response.message = rssFetchData.errorMessage;
                 return response;
             }
         }
@@ -53,10 +55,12 @@ module.exports.addRssSubcription = async (userData) => {
         let isUserAlreadySubscribed = await isUserAlreadySubscribedRss(userData.userId, rssSiteId);
         if (!isUserAlreadySubscribed) {
             let savedSubscription = await UserRssSubscription.create({ rss_id: rssSiteId, user_id: userData.userId });
-            let response = { message: StatusMessage.Add_Rss_Subscription_Success_Message, statusCode: 200 };
+            response.isSubscriptionSuccess = true;
+            response.message = StatusMessage.Add_Rss_Subscription_Success_Message;
             return response;
         }
-        let response = { message: StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message, statusCode: 200};
+        response.isSubscriptionSuccess = true;
+        response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message;
         return response;
     }
     catch (error) {

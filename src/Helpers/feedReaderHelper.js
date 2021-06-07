@@ -1,6 +1,6 @@
 const feedRead = require ("davefeedread");
 
-module.exports.parseExample = async (rssFeedUrl) => {
+module.exports.rssParser = async (rssFeedUrl) => {
     const timeOutSecs = 30;
         return new Promise(function(resolve, reject){
         try{
@@ -17,6 +17,7 @@ module.exports.parseExample = async (rssFeedUrl) => {
                     statusCode: 200,
                     content: theFeed
                 }
+                console.log(theFeed);
                 resolve(sucessResponse)
                 }
             });
