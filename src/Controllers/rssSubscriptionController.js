@@ -2,7 +2,7 @@ const AddRssSubscription = require('../Services/addRssSubscriptionService');
 const RssSubscriptionList = require('../Services/rssSubscriptionListService');
 const JwtHelper = require('../Helpers/jwtTokenHelper');
 
-module.exports.AddRssSubscription = async (request, reply) => {
+module.exports.addRssSubscription = async (request, reply) => {
     try {
         const decoded = JwtHelper.tokenVerifyDecoder(request.headers.authorization);
         console.log(decoded);
@@ -27,7 +27,7 @@ module.exports.AddRssSubscription = async (request, reply) => {
     }
 }
 
-module.exports.GetRssSubscriptionList = async (request, reply) => {
+module.exports.getRssSubscriptionList = async (request, reply) => {
     try {
         const decoded = JwtHelper.tokenVerifyDecoder(request.headers.authorization);
         const user = {

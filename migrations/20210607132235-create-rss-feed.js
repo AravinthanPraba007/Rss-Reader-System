@@ -1,39 +1,37 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, DataTypes) => {
-    await queryInterface.createTable('rss_site', {
+    await queryInterface.createTable('rss_feed', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      url: {
-        type: DataTypes.STRING(3000),
+      title: {
+        type: DataTypes.TEXT,
         allowNull: false
       },
-      title: {
-        type: DataTypes.TEXT
+      link: {
+        type: DataTypes.STRING(3000)
       },
       description: {
         type: DataTypes.TEXT
       },
-      siteLink: {
-        type: DataTypes.STRING(3000)
+      summary: {
+        type: DataTypes.TEXT
       },
-      imageUrl: {
-        type: DataTypes.STRING(3000)
+      guid: {
+        type: DataTypes.STRING(3000),
+        allowNull: false
       },
-      lastFeedFetchedAt: {
+      pubDate: {
         type: DataTypes.DATE
       },
-      lastPubDate: {
-        type: DataTypes.DATE
-      },
-      feedFetchFrequency: {
+      rss_id: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        defaultValue: 60
+        allowNull: false,
+        references: { model: 'rss_site', key: 'id' }
       },
       createdAt: {
         allowNull: false,
@@ -42,14 +40,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: DataTypes.DATE
-      },
-      deletedAt: {
-        allowNull: true,
-        type: DataTypes.DATE
       }
     });
   },
   down: async (queryInterface, DataTypes) => {
-    await queryInterface.dropTable('rss_site');
+    await queryInterface.dropTable('rss_feed');
   }
 };

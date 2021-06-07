@@ -13,7 +13,7 @@ module.exports = [
                 })
             },
             handler: async (request, reply) => {
-                return RssSubscriptionController.AddRssSubscription(request, reply);
+                return RssSubscriptionController.addRssSubscription(request, reply);
             }
         }
     },
@@ -26,7 +26,7 @@ module.exports = [
             validate: {
             },
             handler: async (request, reply) => {
-                return RssSubscriptionController.GetRssSubscriptionList(request, reply);
+                return RssSubscriptionController.getRssSubscriptionList(request, reply);
             }
         }
     }

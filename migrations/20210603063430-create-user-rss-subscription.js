@@ -8,11 +8,6 @@ module.exports = {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true
-      },
       rss_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -29,6 +24,10 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: DataTypes.DATE
+      },
+      deletedAt: {
+        allowNull: true,
         type: DataTypes.DATE
       }
     });

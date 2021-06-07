@@ -17,7 +17,6 @@ module.exports.rssParser = async (rssFeedUrl) => {
                     statusCode: 200,
                     content: theFeed
                 }
-                console.log(theFeed);
                 resolve(sucessResponse)
                 }
             });

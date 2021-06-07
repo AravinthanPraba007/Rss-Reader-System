@@ -3,32 +3,46 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class UserRssSubscription extends Model {
+  class RssFeed extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({RssSite, User}) {
+    static associate({ RssSite }) {
       // define association here
       this.belongsTo(RssSite, {foreignKey: 'rss_id'});
-      this.belongsTo(User, {foreignKey: 'user_id'})
     }
   };
-  UserRssSubscription.init({
+  RssFeed.init({
     rss_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    user_id: {
-      type: DataTypes.INTEGER,
+    title: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
+    link: {
+      type: DataTypes.STRING(3000)
+    },
+    description: {
+      type: DataTypes.TEXT
+    },
+    summary: {
+      type: DataTypes.TEXT
+    },
+    guid: {
+      type: DataTypes.STRING(3000),
+      allowNull: false
+    },
+    pubDate: {
+      type: DataTypes.DATE
+    }
   }, {
     sequelize,
-    paranoid: true,
-    tableName: 'user_rss_subscription',
-    modelName: 'UserRssSubscription',
+    tableName: 'rss_feed',
+    modelName: 'RssFeed',
   });
-  return UserRssSubscription;
+  return RssFeed;
 };
