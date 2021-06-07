@@ -6,7 +6,9 @@ const statusMessages = {
     Login_Invalid_Password_Message : 'Invalid password',
     Add_Rss_Subscription_Invalid_UserID : "UserId not correct",
     Add_Rss_Subscription_Success_Message : "Rss feed Subscribed Sucessfully",
-    Add_Rss_Subscription_Already_Subscribed_Message : "Already Subscribed to this rss site"
+    Add_Rss_Subscription_Already_Subscribed_Message : "Already Subscribed to this rss site",
+    Fetch_Rss_Subscription_List_Success : "Sucessfully fetched the Subscription list",
+    Fetch_Available_Rss_Sites : " Successfully fetched the available Rss sites"
 }
 
 module.exports = statusMessages;

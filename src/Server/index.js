@@ -1,8 +1,10 @@
 const Hapi = require('hapi');
 const AuthRouters = require('../Routers/authRouters');
 const RssSubscriptionRouters = require('../Routers/rssSubscriptionRouters');
+const RssSiteRouters = require('../Routers/rssSiteRouter');
 const server = new Hapi.Server();
 const AuthJwt = require('hapi-auth-jwt2');
+const UserHelper = require('../Helpers/userHelper');
 
 // Configure the server to start the host and port
 server.connection({
@@ -11,7 +13,8 @@ server.connection({
 });
 
 const validate = async function (decoded, request, callback) {
-  if (false) {
+  let validUser = UserHelper.isUserIdExist(decoded.userId)
+  if (!validUser) {
     return callback(null, false);
   }
   else {
@@ -37,6 +40,11 @@ const init = async () => {
   })
 
   RssSubscriptionRouters.forEach((route) => {
+    console.log(`Adding the end point: ${route.path}`);
+    server.route(route);
+  })
+
+  RssSiteRouters.forEach((route) => {
     console.log(`Adding the end point: ${route.path}`);
     server.route(route);
   })
