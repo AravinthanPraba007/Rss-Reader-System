@@ -37,6 +37,26 @@ module.exports.getRssSiteFeeds = async (request, reply) => {
 
 }
 
+module.exports.getRssSiteFeedsFromWeb = async (request, reply) => {
+    try {
+        let rssFeedUrl = request.payload.rssFeedUrl;
+        let data = await RssSiteFeedService.getRssSiteFeedsFromWeb(rssFeedUrl)
+        if (data.isFeedsFetched) {
+            let response = reply({ message: data.message, rssSiteFeeds: data.rssSiteFeeds });
+            response.code(200);
+            return response;
+        }
+        else {
+            let response = reply({ message: data.message });
+            response.code(500);
+            return response;
+        }
+    } catch (error) {
+        return reply(Boom.boomify(error));
+    }
+
+}
+
 module.exports.storeRssSiteFeeds = async (request, reply) => {
     try {
         let rssFeedUrl = request.payload.rssFeedUrl;

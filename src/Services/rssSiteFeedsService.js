@@ -13,6 +13,7 @@ module.exports.getRssSiteFeeds = async function(rssFeedUrl) {
                 url: rssFeedUrl
             }
         });
+        if(rssSite){
         const rssSiteId = rssSite.dataValues.id;
         let fetchedFeeds = await RssFeed.findAll({
             where: {
@@ -20,8 +21,44 @@ module.exports.getRssSiteFeeds = async function(rssFeedUrl) {
             }
         });
         response.isFeedsFetched = true;
+        response.message = "Rss site feeds fetched sucessfully"
         response.rssSiteFeeds = fetchedFeeds;
         return response;
+    }
+    else {
+        response.message = "Provide rss site is not registered";
+        return response;
+    }
+
+    } catch (error) {
+        return error;
+    }
+}
+
+
+
+module.exports.getRssSiteFeedsFromWeb = async function(rssFeedUrl) {
+
+    try {
+        let response = {
+            isFeedsFetched : false,
+        }
+        
+        let fetchedFeeds;
+        let data = await FeedParser.rssParser(rssFeedUrl);
+        if (data.statusCode && data.statusCode === 200) {
+            fetchedFeeds = data.content.items;
+            response.isFeedsFetched = true;
+            response.message = "Rss site feeds fetched sucessfully"
+            response.rssSiteFeeds = fetchedFeeds;
+            return response;
+        }
+        else {
+            response.message = data.message;
+            return response;
+        }
+        
+    
 
     } catch (error) {
         return error;

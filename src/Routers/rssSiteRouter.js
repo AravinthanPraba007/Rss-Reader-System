@@ -33,6 +33,22 @@ module.exports = [
 },
 {
     method: 'POST',
+    path: '/getRssSiteFeedsFromWeb',
+    
+    config: {
+        auth: false,
+        validate: {
+            payload: Joi.object({
+                rssFeedUrl: Joi.string().uri().required()
+            })
+        },
+        handler: async (request, reply) => {
+            return RssSiteController.getRssSiteFeedsFromWeb(request, reply);
+        }
+    }
+},
+{
+    method: 'POST',
     path: '/storeRssSiteFeeds',
     
     config: {
