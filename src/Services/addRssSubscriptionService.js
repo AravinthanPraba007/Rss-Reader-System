@@ -2,8 +2,7 @@
 const FeedParser = require('../Helpers/feedReaderHelper');
 const { User, RssSite, UserRssSubscription } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
-
-const FeedParser2 = require('../Helpers/feedReaderHelper2');
+const RssSiteHelper = require('../Helpers/rssSiteHelper');
 
 module.exports.addRssSubcription = async (userData) => {
     /*
@@ -20,31 +19,18 @@ module.exports.addRssSubcription = async (userData) => {
         let rssIdAlreadyExist = await isRssUrlExist(userData.rssFeedUrl);
         let rssSiteId;
         if (!rssIdAlreadyExist) {
-            rssFetchData = await FeedParser.rssParser(userData.rssFeedUrl);
-            if (rssFetchData.statusCode && rssFetchData.statusCode === 200) {
-                let newRssDetails = {};
-                newRssDetails.rssFeedUrl = userData.rssFeedUrl;
-                if (rssFetchData.content && rssFetchData.content.head) {
-                    if (rssFetchData.content.head.title)
-                        newRssDetails.title = rssFetchData.content.head.title;
-                    if (rssFetchData.content.head.description)
-                        newRssDetails.description = rssFetchData.content.head.description;
-                    if (rssFetchData.content.head.link)
-                        newRssDetails.siteLink = rssFetchData.content.head.link;
-                    if (rssFetchData.content.head.image && rssFetchData.content.head.image.url)
-                        newRssDetails.imageUrl = rssFetchData.content.head.image.url;
+            let data = await RssSiteHelper.addNewRssSite(userData.rssFeedUrl);
+            if(data.isRssSiteStored){
+                if( data.rssSiteId) {
+                    rssSiteId = data.rssSiteId;
                 }
-                let savedRssSite = await RssSite.create({
-                    url: userData.rssFeedUrl,
-                    title: newRssDetails.title,
-                    description: newRssDetails.description,
-                    siteLink: newRssDetails.siteLink,
-                    imageUrl: newRssDetails.imageUrl
-                });
-                rssSiteId = savedRssSite.dataValues.id;
+                else {
+                    response.message = "Rss site id not populated"
+                    return response;
+                }
             }
             else {
-                response.message = rssFetchData.errorMessage;
+                response.message = data.message;
                 return response;
             }
         }
