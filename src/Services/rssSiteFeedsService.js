@@ -1,6 +1,8 @@
 const FeedParser = require('../Helpers/feedReaderHelper');
 const FeedParser2 = require('../Helpers/feedReaderHelper2');
 const { RssSite, RssFeed } = require('../../models');
+const StatusMessage = require('../Constants/statusMessages');
+
 
 module.exports.getRssSiteFeeds = async function(rssFeedUrl) {
 
@@ -21,12 +23,14 @@ module.exports.getRssSiteFeeds = async function(rssFeedUrl) {
             }
         });
         response.isFeedsFetched = true;
-        response.message = "Rss site feeds fetched sucessfully"
+        // response.message = "Rss site feeds fetched sucessfully"
+        response.message = StatusMessage.FeedFetch_Success;
         response.rssSiteFeeds = fetchedFeeds;
         return response;
     }
     else {
-        response.message = "Provide rss site is not registered";
+        // response.message = "Provide rss site is not registered";
+        response.message = StatusMessage.Given_RssSite_Not_Registered;
         return response;
     }
 

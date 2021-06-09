@@ -11,14 +11,16 @@ module.exports.addRssSite = async (rssFeedUrl) => {
         let rssUrlAlreadyExist = await isRssUrlExist(rssFeedUrl);
         if(rssUrlAlreadyExist){
             response.isRssSiteAdded = true;
-            response.message = "Given Rss Url already present";
+            // response.message = "Given Rss Url already present";
+            response.message = StatusMessage.AddRssSite_Url_Already_Present;
             return response;
         }
         else {
             let data = await RssSiteHelper.addNewRssSite(rssFeedUrl);
             if(data.isRssSiteStored) {
                 response.isRssSiteAdded = true;
-                response.message = "Rss site added successfully";
+                // response.message = "Rss site added successfully";
+                response.message = StatusMessage.AddRssSite_Success;
                 return response;
             }
             else {

@@ -1,5 +1,6 @@
 const FeedParser = require('./feedReaderHelper');
 const { RssSite, RssFeed } = require('../../models');
+const StatusMessage = require('../Constants/statusMessages');
 
 module.exports.storeFeed = async function (rssSite, rssFetchData) {
 
@@ -15,7 +16,8 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
                     if(rssSite.pubDate){
                        if(rssHeadDetails.pubDate > rssSite.pubDate) {
                         response.isFeedsStored = true;
-                        response.message = "No new feed Published, try after some time"
+                        // response.message = "No new feed Published, try after some time"
+                        response.message = StatusMessage.FeedFetch_No_New_Feed_published;
                         return response;
                        }
                     }
@@ -47,7 +49,8 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
                         }
                     });
                     response.isFeedsStored = true;
-                    response.message = " Rss feeds fetched and stored successfully"
+                    // response.message = " Rss feeds fetched and stored successfully"
+                    response.message = StatusMessage.FeedFetch_And_Stored_Success;
                     return response;
                 }
                 else {
@@ -57,14 +60,16 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
             }
             else {
                 response.isFeedsStored = true;
-                response.message = "Fetch recently only done, try after some time";
+                // response.message = "Fetch recently only done, try after some time";
+                response.message = StatusMessage.FeedFetch_Done_Recently_Only;
                 return response;
             }
 
 
         }
         else {
-            response.message = "Without rss Site details We cant fetch the feeds";
+            // response.message = "Without rss Site details We cant fetch the feeds";
+            response.message = StatusMessage.FeedFetch_Without_RssSiteDetails_Error;
             return response;
         }
     } catch (error) {

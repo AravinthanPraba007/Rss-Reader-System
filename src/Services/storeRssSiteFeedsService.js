@@ -25,7 +25,8 @@ module.exports.storeRssSiteFeeds = async function (rssFeedUrl) {
             }
         }
         else {
-            response.message = "Given Rss Site is not registered";
+            // response.message = "Given Rss Site is not registered";
+            response.message = StatusMessage.Given_RssSite_Not_Registered;
             return response;
         }
 

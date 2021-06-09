@@ -25,7 +25,8 @@ module.exports.addRssSubcription = async (userData) => {
                     rssSiteId = data.rssSiteId;
                 }
                 else {
-                    response.message = "Rss site id not populated"
+                    // response.message = "Rss site id not populated"
+                    response.message = StatusMessage.AddRssSubscription_RssSiteId_Not_Populated_Error;
                     return response;
                 }
             }
