@@ -10,6 +10,11 @@ const UserHelper = require('../Helpers/userHelper');
 server.connection({
   port: 8080,
   host: 'localhost',
+  routes: {
+    cors: {
+        origin: ['*'] // an array of origins or 'ignore'           
+    }
+}
 });
 
 const validate = async function (decoded, request, callback) {

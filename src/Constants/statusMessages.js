@@ -16,12 +16,12 @@ const statusMessages = {
     FeedFetch_Done_Recently_Only : "Fetch recently only done, try after some time",
     FeedFetch_Without_RssSiteDetails_Error : "Without rss Site details We cant fetch the feeds",
 
-    AddRssSite_Url_Already_Present = "Given Rss Url already present",
-    AddRssSite_Success = "Rss site added successfully",
+    AddRssSite_Url_Already_Present : "Given Rss Url already present",
+    AddRssSite_Success : "Rss site added successfully",
 
-    AddRssSubscription_RssSiteId_Not_Populated_Error = "Rss site id not populated",
-    Given_RssSite_Not_Registered: StoreFeed_RssSite_Not_Registered = "Given Rss Site is not registered",
-    FeedFetch_Success = "Rss site feeds fetched sucessfully",
+    AddRssSubscription_RssSiteId_Not_Populated_Error : "Rss site id not populated",
+    Given_RssSite_Not_Registered: "Given Rss Site is not registered",
+    FeedFetch_Success : "Rss site feeds fetched sucessfully",
 
 }
 

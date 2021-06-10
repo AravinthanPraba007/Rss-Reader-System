@@ -10,7 +10,7 @@ module.exports.userSignup = async (user, reply) => {
         return reply(Boom.conflict(data.message));
     }
     else {
-        let response = reply({ message: data.message });
+        let response = reply({ message: data.message, token: data.jwtToken  });
         response.code(201);
         response.header('Authorization', data.jwtToken);
         return response;
@@ -28,7 +28,7 @@ module.exports.userLogin = async (user, reply) => {
         return reply(Boom.unauthorized(data.message));
     }
     else {
-        let response = reply({ message: data.message });
+        let response = reply({ message: data.message, token: data.jwtToken });
         response.code(200);
         response.header('Authorization', data.jwtToken);
         return response;
