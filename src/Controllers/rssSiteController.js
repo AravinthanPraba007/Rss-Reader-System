@@ -4,6 +4,8 @@ const StoreRssSiteFeedService = require('../Services/storeRssSiteFeedsService');
 const StoreRssSiteService = require('../Services/addRssSiteService');
 
 const Boom = require('boom');
+const { storeFeed } = require('../Helpers/feedHelper');
+const { feedStore } = require('../Helpers/feedStoreHelper');
 
 module.exports.getAvailableRssSites = async (request, reply) => {
     try {
@@ -97,6 +99,18 @@ module.exports.storeRssSiteFeeds = async (request, reply) => {
 
 }
 
+
+module.exports.storeFeeds = async (request, reply) => {
+    try {
+        let data = await feedStore();
+        let response = reply({ message: data.message});
+        response.code(200);
+        return response;
+    } catch (error) {
+        return reply(Boom.boomify(error));
+    }
+
+}
 
 module.exports.addRssSite = async (request, reply) => {
     try {

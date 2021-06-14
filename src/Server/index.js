@@ -5,6 +5,7 @@ const RssSiteRouters = require('../Routers/rssSiteRouter');
 const server = new Hapi.Server();
 const AuthJwt = require('hapi-auth-jwt2');
 const UserHelper = require('../Helpers/userHelper');
+const { triggerJob } = require('../Jobs/queues/sampleQueue');
 
 // Configure the server to start the host and port
 server.connection({
@@ -67,3 +68,5 @@ process.on('unhandledRejection', (err) => {
 })
 
 init();
+// triggerJob();
+

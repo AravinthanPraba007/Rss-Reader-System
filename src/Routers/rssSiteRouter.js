@@ -111,5 +111,18 @@ module.exports = [
         }
     }
 },
+{
+    method: 'GET',
+    path: '/storeFeeds',
+    
+    config: {
+        auth: false,
+        validate: {
+        },
+        handler: async (request, reply) => {
+            return RssSiteController.storeFeeds(request, reply);
+        }
+    }
+},
 
 ]
