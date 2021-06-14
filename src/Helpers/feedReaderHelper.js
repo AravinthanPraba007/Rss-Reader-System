@@ -8,7 +8,7 @@ module.exports.rssParser = async (rssFeedUrl) => {
             if (err) {
                 console.log (err);
                 const errorResponse = {
-                    errorMessage : err.message
+                    message : err.message
                 }
                 resolve(errorResponse);
                 }

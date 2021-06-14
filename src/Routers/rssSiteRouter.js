@@ -33,6 +33,22 @@ module.exports = [
 },
 {
     method: 'POST',
+    path: '/getRssSite',
+    
+    config: {
+        auth: false,
+        validate: {
+            payload: Joi.object({
+                rssFeedUrl: Joi.string().uri().required()
+            })
+        },
+        handler: async (request, reply) => {
+            return RssSiteController.getRssSiteFeeds(request, reply);
+        }
+    }
+},
+{
+    method: 'POST',
     path: '/getRssSiteFeedsFromWeb',
     
     config: {
@@ -44,6 +60,22 @@ module.exports = [
         },
         handler: async (request, reply) => {
             return RssSiteController.getRssSiteFeedsFromWeb(request, reply);
+        }
+    }
+},
+{
+    method: 'POST',
+    path: '/getRssSiteFromWeb',
+    
+    config: {
+        auth: false,
+        validate: {
+            payload: Joi.object({
+                rssFeedUrl: Joi.string().uri().required()
+            })
+        },
+        handler: async (request, reply) => {
+            return RssSiteController.getRssSiteFromWeb(request, reply);
         }
     }
 },
