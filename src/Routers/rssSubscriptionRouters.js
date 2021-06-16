@@ -13,7 +13,7 @@ module.exports = [
                 })
             },
             handler: async (request, reply) => {
-                return RssSubscriptionController.addRssSubscription(request, reply);
+                return RssSubscriptionController.addRssSubscriptionByUrl(request, reply);
             }
         }
     },

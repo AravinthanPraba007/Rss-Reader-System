@@ -2,6 +2,9 @@ const Hapi = require('hapi');
 const AuthRouters = require('../Routers/authRouters');
 const RssSubscriptionRouters = require('../Routers/rssSubscriptionRouters');
 const RssSiteRouters = require('../Routers/rssSiteRouter');
+const RssSiteFeedRouters = require('../Routers/rssSiteFeedRouters');
+
+
 const server = new Hapi.Server();
 const AuthJwt = require('hapi-auth-jwt2');
 const UserHelper = require('../Helpers/userHelper');
@@ -58,49 +61,29 @@ const init = async () => {
     });
   server.auth.default('jwt');
 
-  // server.route([...AuthRouters]);
+  console.log("--- Adding Auth Routers ---");
   AuthRouters.forEach((route) => {
-    console.log(`Adding the end point: ${route.path}`);
+    console.log(`End point: ${route.path}`);
     server.route(route);
   })
 
+  console.log("--- Adding RssSubscription Routers ---");
   RssSubscriptionRouters.forEach((route) => {
-    console.log(`Adding the end point: ${route.path}`);
+    console.log(`End point: ${route.path}`);
     server.route(route);
   })
 
+  console.log("--- Adding RssSite Routers ---");
   RssSiteRouters.forEach((route) => {
-    console.log(`Adding the end point: ${route.path}`);
+    console.log(`End point: ${route.path}`);
     server.route(route);
   })
 
-
-/**
-  try {
-    serverAdapter.setBasePath('/ui');
-    const bullBoardRegister = serverAdapter.registerPlugin().register;
-    bullBoardRegister.attributes = {
-      version: '3.2.8',
-      name: '@bull-board/hapi',
-    };
-    const bullBoardPlugin = {
-      register: bullBoardRegister,
-    };
-
-    console.log("-------");
-    console.log(bullBoardPlugin);
-    // console.log(serverAdapter);
-    console.log("-------");
-    // console.log(serverAdapter.registerPlugin().register);
-    // console.log("-------");
-    server.register(bullBoardPlugin, () => {
-      console.log("okay");
-    });
-  } catch (error) {
-    console.log(error);
-  }
-
-   */
+  console.log("--- Adding RssSiteFeed Routers ---");
+  RssSiteFeedRouters.forEach((route) => {
+    console.log(`End point: ${route.path}`);
+    server.route(route);
+  })
 
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);

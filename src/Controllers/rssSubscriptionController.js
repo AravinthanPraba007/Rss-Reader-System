@@ -1,8 +1,8 @@
-const AddRssSubscription = require('../Services/addRssSubscriptionService');
+const AddRssSubscription = require('../Services/rssSubscriptionService');
 const RssSubscriptionList = require('../Services/rssSubscriptionListService');
 const JwtHelper = require('../Helpers/jwtTokenHelper');
 
-module.exports.addRssSubscription = async (request, reply) => {
+module.exports.addRssSubscriptionByUrl = async (request, reply) => {
     try {
         const decoded = JwtHelper.tokenVerifyDecoder(request.headers.authorization);
         console.log(decoded);
@@ -10,7 +10,7 @@ module.exports.addRssSubscription = async (request, reply) => {
             rssFeedUrl: request.payload.rssFeedUrl,
             userId: decoded.userId
         }
-        let data = await AddRssSubscription.addRssSubcription(user);
+        let data = await AddRssSubscription.addRssSubcriptionByUrl(user);
         if(data.isSubscriptionSuccess) {
             let  response = reply({ message: data.message });
             response.code(200);

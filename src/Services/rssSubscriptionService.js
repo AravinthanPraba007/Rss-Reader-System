@@ -4,7 +4,7 @@ const { User, RssSite, UserRssSubscription } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
 const RssSiteHelper = require('../Helpers/rssSiteHelper');
 
-module.exports.addRssSubcription = async (userData) => {
+module.exports.addRssSubcriptionByUrl = async (userData) => {
     /*
     1. Check the rss url alreaddy enrolled in the system
     2. If new rss site try to fetch the rss site and store it in the rss db
