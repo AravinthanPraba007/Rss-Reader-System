@@ -41,6 +41,33 @@ module.exports.getRssSiteFromWeb = async function(rssFeedUrl) {
     }
 }
 
+module.exports.getFullRssSiteDetailsFromWeb = async function(rssFeedUrl) {
+
+    try {
+        let response = {
+            isRssSiteFetched : false,
+        }
+        
+        let fetchedFeeds;
+        let data = await FeedParser.rssParser(rssFeedUrl);
+        if (data.statusCode && data.statusCode === 200) {
+            response.isRssSiteFetched = true;
+            response.message = "Rss site fetched sucessfully"
+            response.rssSite = data;
+            return response;
+        }
+        else {
+            response.message = data.message;
+            return response;
+        }
+        
+    
+
+    } catch (error) {
+        return error;
+    }
+}
+
 function parseFetchedRssSiteDetails(rssFetchData) {
     let newRssDetails = {};
     if (rssFetchData.content && rssFetchData.content.head) {

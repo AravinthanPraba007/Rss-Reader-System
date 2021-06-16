@@ -1,17 +1,15 @@
-//Need to remove this file
-const FeedParser = require('./feedReaderHelper');
-const { RssSite, RssFeed, sequelize } = require('../../models');
+
+const FeedParser = require('../../Helpers/feedReaderHelper');
+const { RssSite, RssFeed, sequelize } = require('../../../models');
 const { QueryTypes } = require('sequelize');
 
-module.exports.feedStore = async function () {
-    
+module.exports.feedStoreHelper = async function () {
     try {
         let response = {
             isFetchAndStoreDone: false,
             errorMessage : [],
             sucessMessage : []
         }
-        
         let rssSiteResults  = [];
         rssSiteResults = await sequelize.query("SELECT * FROM rss_site", {
             type: QueryTypes.SELECT 
@@ -28,11 +26,9 @@ module.exports.feedStore = async function () {
                 let rssFetchData = await FeedParser.rssParser(rssSite.url);
                 if (rssFetchData.statusCode && rssFetchData.statusCode === 200) {
                     let rssHeadDetails = rssFetchData.content.head;
-                    console.log(rssHeadDetails);
                     if(rssHeadDetails.pubDate && rssHeadDetails.pubDate != 'Invalid Date') {
                     if(rssSite.pubDate){
                        if(rssHeadDetails.pubDate > rssSite.pubDate) {
-                        response.isFetchAndStoreDone = true;
                         response.sucessMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- No new feed Published`);
                         continue;
                        }
@@ -44,6 +40,9 @@ module.exports.feedStore = async function () {
                     const rssSiteId = rssSite.id;
                     const rssFeedItemsDetails = rssFetchData.content.items;
                     const latestFeeds = rssFeedItemsDetails.map((item)=> {
+                        if(isNaN(item.pubDate.getTime())) {
+                            item.pubDate = null
+                        }
                         return {
                             rss_id: rssSiteId,
                             title: item.title,
@@ -70,35 +69,29 @@ module.exports.feedStore = async function () {
                     response.errorMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- Feed parser result is not having pub date`) 
                     continue;
                 }
-                }
-                else {
-                    response.errorMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- Feed parser result did not produce 200 Status code`)
+            }
+            else {
+                response.errorMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- Feed parser result did not produce 200 Status code`)
                     continue;
-                }
+            }
             }
             else {
                 response.errorMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- Fetch recently only done, try after some time`)
                 continue;
             }
-
-
         }
         else {
             response.errorMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- Given rss link not registered in the system`)
             continue;
         }
     }
-    console.log(response.sucessMessage);
-    console(response.errorMessage);
     response.isFetchAndStoreDone = true;
     return response;
     } catch (error) {
-        
         console.log(error);
         throw new Error(error);
     }
 }
-
 
 function feedsFetchRequired(lastFeedFetchedAt) {
     try {
@@ -120,5 +113,3 @@ function feedsFetchRequired(lastFeedFetchedAt) {
         throw new Error(error);
     }
 }
-
-

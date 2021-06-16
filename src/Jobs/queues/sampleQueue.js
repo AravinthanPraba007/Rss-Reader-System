@@ -19,8 +19,9 @@ sampleQueue.process(sampleProcessor);
 
 module.exports.triggerJob = () => {
     console.log("Adding the job to queue");
-    let data ="sample data";
-    sampleQueue.add(data ,{repeat: {cron: '33 * * * *'}});
+    sampleQueue.add(null,{repeat: {cron: '13 * * * *'}});
+    // sampleQueue.add();
+    console.log(sampleQueue);
 }
   
 module.exports.sampleQueue = sampleQueue;
