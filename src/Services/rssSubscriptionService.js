@@ -39,21 +39,123 @@ module.exports.addRssSubcriptionByUrl = async (userData) => {
             rssSiteId = rssIdAlreadyExist;
         }
 
-        let isUserAlreadySubscribed = await isUserAlreadySubscribedRss(userData.userId, rssSiteId);
-        if (!isUserAlreadySubscribed) {
-            let savedSubscription = await UserRssSubscription.create({ rss_id: rssSiteId, user_id: userData.userId });
-            response.isSubscriptionSuccess = true;
-            response.message = StatusMessage.Add_Rss_Subscription_Success_Message;
-            return response;
-        }
-        response.isSubscriptionSuccess = true;
-        response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message;
-        return response;
+
+        // let isUserAlreadySubscribed = await isUserAlreadySubscribedRss(userData.userId, rssSiteId);
+        // if (!isUserAlreadySubscribed) {
+        //     let savedSubscription = await UserRssSubscription.create({ rss_id: rssSiteId, user_id: userData.userId });
+        //     response.isSubscriptionSuccess = true;
+        //     response.message = StatusMessage.Add_Rss_Subscription_Success_Message;
+        //     return response;
+        // }
+        // response.isSubscriptionSuccess = true;
+        // response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message;
+        // return response;
+
+        let userSubscriptionPresent = await isUserSubscriptionPresentwithSoftDelete(userData.userId, rssSiteId);
+            if (userSubscriptionPresent) {
+                if (userSubscriptionPresent.deletedAt) {
+                    let savedSubscription = await UserRssSubscription.restore({
+                        where: {
+                            id: userSubscriptionPresent.id
+                        }
+                    })
+                    response.isSubscriptionSuccess = true;
+                    response.message = StatusMessage.Add_Rss_Subscription_Success_Message;
+                    return response;
+                }
+                else{
+                response.isSubscriptionSuccess = true;
+                response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
+                return response;
+                }
+                
+            }
+            else {
+                let savedSubscription = await UserRssSubscription.create({ rss_id: rssSiteId, user_id: userData.userId });
+                response.isSubscriptionSuccess = true;
+                response.message = StatusMessage.Add_Rss_Subscription_Success_Message;
+                return response;
+            }
     }
     catch (error) {
         return error;
     }
 }
+
+module.exports.manageRssSubcription = async (userData) => {
+    try {
+        let rssFetchData;
+        let response  = {
+            isActionSuccess : false
+        }
+
+        if((userData.action) === 'subscribe') {
+            if(!userData.rssId) {
+                response.message = "Rss Site id is Required";
+                return response;
+            }
+            let userSubscriptionPresent = await isUserSubscriptionPresentwithSoftDelete(userData.userId, userData.rssId);
+            if (userSubscriptionPresent) {
+                if (userSubscriptionPresent.deletedAt) {
+                    let savedSubscription = await UserRssSubscription.restore({
+                        where: {
+                            id: userSubscriptionPresent.id
+                        }
+                    })
+                    response.isActionSuccess = true;
+                    response.message = StatusMessage.Add_Rss_Subscription_Success_Message;
+                    return response;
+                }
+                else{
+                response.isActionSuccess = true;
+                response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
+                return response;
+                }
+                
+            }
+            else {
+                let savedSubscription = await UserRssSubscription.create({ rss_id: userData.rssId, user_id: userData.userId });
+                response.isActionSuccess = true;
+                response.message = "Feed subscribed successfully";
+                return response;
+            }
+        }
+        else if((userData.action) === 'unsubscribe') {
+            if(!userData.subscriptionId) {
+                response.message = "Subscrption id is Required";
+                return response;
+            }
+            let userSubscriptionPresent = await isUserSubscriptionPresent(userData.subscriptionId, userData.userId);
+            if (userSubscriptionPresent) {
+                let savedSubscription = await UserRssSubscription.destroy({
+                    where: {
+                        id: userData.subscriptionId
+                    }
+                })
+                response.isActionSuccess = true;
+                response.message = "Feed Unsubcribed Successfully";
+                return response;
+            }
+            else {
+                response.isActionSuccess = true;
+                response.message = "User not subscribed to the Feed";
+                return response;
+            }
+        }
+        else {
+            response.message = "Invalid Action requested";
+            return response;
+        }
+
+
+        
+    }
+    catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
 
 async function isUserIdExist(userId) {
     try {
@@ -87,6 +189,8 @@ async function isRssUrlExist(rssUrl) {
     }
 }
 
+
+
 async function isUserAlreadySubscribedRss(userId, rssId) {
     try {
         let userSubscription = await UserRssSubscription.findOne({
@@ -104,4 +208,39 @@ async function isUserAlreadySubscribedRss(userId, rssId) {
     }
 }
 
+async function isUserSubscriptionPresentwithSoftDelete(userId, rssId) {
+    try {
+        let userSubscription = await UserRssSubscription.findOne({
+            where: {
+                user_id: userId,
+                rss_id: rssId
+            },
+            paranoid: false
+        });
+        if (userSubscription) {
+            return userSubscription.dataValues;
+        }
+        return false;
+    } catch (error) {
+        return error;
+    }
+}
 
+
+async function isUserSubscriptionPresent(subscriptionId, userId) {
+    try {
+        let userSubscription = await UserRssSubscription.findOne({
+            where: {
+                id: subscriptionId,
+                user_id: userId
+            }
+        });
+        console.log(userSubscription);
+        if (userSubscription) {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        return error;
+    }
+}
