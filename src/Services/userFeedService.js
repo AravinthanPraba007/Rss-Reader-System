@@ -16,7 +16,7 @@ module.exports.getUserFeed = async function (userData) {
         //     include: 'RssSite'
         // });
         let rssSiteList = [];
-        rssSiteList = await sequelize.query("SELECT rss_id FROM user_rss_subscription where user_id = :userId", 
+        rssSiteList = await sequelize.query('SELECT rss_id FROM user_rss_subscription where user_id = :userId AND "deletedAt" IS NULL', 
         {
             replacements: { userId: userData.userId },
             type: QueryTypes.SELECT 
