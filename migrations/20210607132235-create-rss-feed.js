@@ -23,7 +23,8 @@ module.exports = {
       },
       guid: {
         type: DataTypes.STRING(3000),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       pubDate: {
         type: DataTypes.DATE

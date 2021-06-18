@@ -15,7 +15,8 @@ var matador = require('bull-ui/app');
 const { createBullBoard } = require('@bull-board/api');
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
 const { HapiAdapter } = require('@bull-board/hapi');
-const Path = require('path')
+const Path = require('path');
+const { triggerFeedFetchJob } = require('../Jobs/queues/fetchFeedsQueue');
 // Configure the server to start the host and port
 server.connection({
   port: 8080,
@@ -98,6 +99,6 @@ process.on('unhandledRejection', (err) => {
 })
 
 init();
-BullUi.initBullUi();
-triggerJob();
-
+// BullUi.initBullUi();
+// triggerJob();
+triggerFeedFetchJob();

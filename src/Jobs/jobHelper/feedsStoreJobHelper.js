@@ -40,9 +40,7 @@ module.exports.feedStoreHelper = async function () {
                     const rssSiteId = rssSite.id;
                     const rssFeedItemsDetails = rssFetchData.content.items;
                     const latestFeeds = rssFeedItemsDetails.map((item)=> {
-                        if(isNaN(item.pubDate.getTime())) {
-                            item.pubDate = null
-                        }
+                        
                         return {
                             rss_id: rssSiteId,
                             title: item.title,
@@ -63,7 +61,7 @@ module.exports.feedStoreHelper = async function () {
                             id: rssSite.id
                         }
                     });
-                    continue;;
+                    continue;
                 }
                 else {
                     response.errorMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- Feed parser result is not having pub date`) 

@@ -18,10 +18,8 @@ const options = {
 sampleQueue.process(sampleProcessor);
 
 module.exports.triggerJob = () => {
-    console.log("Adding the job to queue");
+    console.log("Adding Sample job to queue");
     sampleQueue.add(null,{repeat: {cron: '13 * * * *'}});
-    // sampleQueue.add();
-    console.log(sampleQueue);
 }
   
 module.exports.sampleQueue = sampleQueue;
