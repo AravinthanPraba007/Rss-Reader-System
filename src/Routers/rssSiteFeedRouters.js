@@ -19,4 +19,21 @@ module.exports = [
             }
         }
     },
+    {
+        method: 'POST',
+        path: '/getSiteFeeds',
+        
+        config: {
+            auth: 'jwt',
+            validate: {
+                payload: Joi.object({
+                    page: Joi.number().required(),
+                    rssId: Joi.number().required()
+                })
+            },
+            handler: async (request, reply) => {
+                return RssSiteFeedController.getSiteFeeds(request, reply);
+            }
+        }
+    },
 ]
