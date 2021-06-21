@@ -5,27 +5,27 @@ const FeedParser = require('../Helpers/feedReaderHelper');
 module.exports.getAvaliableRssSites = async () => {
     try {
         let rssSiteList = await RssSite.findAll();
-        let response = { message: StatusMessage.Fetch_Available_Rss_Sites, rssSubscriptions: rssSiteList};
+        let response = {
+            message: StatusMessage.Available_Rss_Sites_Fetched_Success,
+            rssSubscriptions: rssSiteList
+        };
         return response;
-        
     } catch (error) {
         return error;
     }
 }
 
-module.exports.getRssSiteFromWeb = async function(rssFeedUrl) {
-
+module.exports.getRssSiteFromWeb = async function (rssFeedUrl) {
     try {
         let response = {
-            isRssSiteFetched : false,
+            isRssSiteFetched: false,
         }
-        
         let fetchedFeeds;
         let data = await FeedParser.rssParser(rssFeedUrl);
         if (data.statusCode && data.statusCode === 200) {
             fetchedFeeds = parseFetchedRssSiteDetails(data);
             response.isRssSiteFetched = true;
-            response.message = "Rss site fetched sucessfully"
+            response.message = StatusMessage.Rss_Detials_Fetched_Success;
             response.rssSite = fetchedFeeds;
             return response;
         }
@@ -33,26 +33,24 @@ module.exports.getRssSiteFromWeb = async function(rssFeedUrl) {
             response.message = data.message;
             return response;
         }
-        
-    
+
+
 
     } catch (error) {
         return error;
     }
 }
 
-module.exports.getFullRssSiteDetailsFromWeb = async function(rssFeedUrl) {
-
+module.exports.getFullRssSiteDetailsFromWeb = async function (rssFeedUrl) {
     try {
         let response = {
-            isRssSiteFetched : false,
+            isRssSiteFetched: false,
         }
-        
         let fetchedFeeds;
         let data = await FeedParser.rssParser(rssFeedUrl);
         if (data.statusCode && data.statusCode === 200) {
             response.isRssSiteFetched = true;
-            response.message = "Rss site fetched sucessfully"
+            response.message = StatusMessage.Rss_Detials_Fetched_Success;
             response.rssSite = data;
             return response;
         }
@@ -60,9 +58,6 @@ module.exports.getFullRssSiteDetailsFromWeb = async function(rssFeedUrl) {
             response.message = data.message;
             return response;
         }
-        
-    
-
     } catch (error) {
         return error;
     }

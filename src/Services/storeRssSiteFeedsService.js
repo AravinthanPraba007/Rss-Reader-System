@@ -1,4 +1,3 @@
-
 const FeedParser = require('../Helpers/feedReaderHelper');
 const { RssSite, RssFeed } = require('../../models');
 const FeedFetchAndStoreHelper = require('../Helpers/feedFetchandStoreHelper');
@@ -6,7 +5,6 @@ const StatusMessage = require('../Constants/statusMessages');
 const RssSiteHelper = require('../Helpers/rssSiteHelper');
 
 module.exports.storeRssSiteFeeds = async function (rssFeedUrl) {
-
     try {
         let response = {
             isFeedsStored: false
@@ -25,8 +23,7 @@ module.exports.storeRssSiteFeeds = async function (rssFeedUrl) {
             }
         }
         else {
-            // response.message = "Given Rss Site is not registered";
-            response.message = StatusMessage.Given_RssSite_Not_Registered;
+            response.message = StatusMessage.RssSite_Not_Registered;
             return response;
         }
 

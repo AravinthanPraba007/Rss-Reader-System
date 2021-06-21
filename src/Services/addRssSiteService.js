@@ -1,25 +1,22 @@
-
 const { RssSite } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
 const RssSiteHelper = require('../Helpers/rssSiteHelper');
 
 module.exports.addRssSite = async (rssFeedUrl) => {
     try {
-        let response  = {
-            isRssSiteAdded : false
+        let response = {
+            isRssSiteAdded: false
         }
         let rssUrlAlreadyExist = await isRssUrlExist(rssFeedUrl);
-        if(rssUrlAlreadyExist){
+        if (rssUrlAlreadyExist) {
             response.isRssSiteAdded = true;
-            // response.message = "Given Rss Url already present";
-            response.message = StatusMessage.AddRssSite_Url_Already_Present;
+            response.message = StatusMessage.RssSite_Url_Already_Present;
             return response;
         }
         else {
             let data = await RssSiteHelper.addNewRssSite(rssFeedUrl);
-            if(data.isRssSiteStored) {
+            if (data.isRssSiteStored) {
                 response.isRssSiteAdded = true;
-                // response.message = "Rss site added successfully";
                 response.message = StatusMessage.AddRssSite_Success;
                 return response;
             }
@@ -32,7 +29,6 @@ module.exports.addRssSite = async (rssFeedUrl) => {
         return error
     }
 }
-
 
 async function isRssUrlExist(rssUrl) {
     try {
