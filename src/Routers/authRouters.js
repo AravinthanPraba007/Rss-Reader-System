@@ -2,9 +2,9 @@ const Joi = require('joi');
 const AuthController = require('../Controllers/authController');
 module.exports = [
     {
-        method: 'post',
+        method: 'POST',
         path: '/signup',
-        
+
         config: {
             auth: false,
             validate: {
@@ -12,7 +12,6 @@ module.exports = [
                     name: Joi.string().required(),
                     email: Joi.string().email().required(),
                     password: Joi.string().required()
-                    
                 })
             },
             handler: async (request, reply) => {
@@ -21,15 +20,14 @@ module.exports = [
         }
     },
     {
-        method: 'post',
+        method: 'POST',
         path: '/googleSignup',
-        
+
         config: {
             auth: false,
             validate: {
                 payload: Joi.object({
                     token: Joi.string().required()
-
                 })
             },
             handler: async (request, reply) => {
@@ -38,14 +36,14 @@ module.exports = [
         }
     },
     {
-        method: 'post',
+        method: 'POST',
         path: '/login',
         config: {
             auth: false,
             validate: {
                 payload: Joi.object({
-                        email: Joi.string().email().required(),
-                        password: Joi.string().required()
+                    email: Joi.string().email().required(),
+                    password: Joi.string().required()
                 })
             },
             handler: async (request, reply) => {
@@ -54,13 +52,13 @@ module.exports = [
         }
     },
     {
-        method: 'post',
+        method: 'POST',
         path: '/googleLogin',
         config: {
             auth: false,
             validate: {
                 payload: Joi.object({
-                        token: Joi.string().required()
+                    token: Joi.string().required()
                 })
             },
             handler: async (request, reply) => {

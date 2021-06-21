@@ -4,7 +4,6 @@ module.exports = [
     {
         method: 'POST',
         path: '/addRssSubscription',
-        
         config: {
             auth: 'jwt',
             validate: {
@@ -20,7 +19,6 @@ module.exports = [
     {
         method: 'GET',
         path: '/getRssSubscriptionList',
-        
         config: {
             auth: 'jwt',
             validate: {
@@ -33,7 +31,6 @@ module.exports = [
     {
         method: 'POST',
         path: '/manageRssSubscription',
-        
         config: {
             auth: 'jwt',
             validate: {

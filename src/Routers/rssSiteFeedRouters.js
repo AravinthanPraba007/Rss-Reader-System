@@ -1,12 +1,10 @@
 const Joi = require('joi');
-const RssSiteController = require('../Controllers/rssSiteController');
 const RssSiteFeedController = require('../Controllers/rssSiteFeedController');
 
 module.exports = [
     {
         method: 'POST',
         path: '/getUserFeeds',
-        
         config: {
             auth: 'jwt',
             validate: {
@@ -22,7 +20,6 @@ module.exports = [
     {
         method: 'POST',
         path: '/getSiteFeeds',
-        
         config: {
             auth: 'jwt',
             validate: {

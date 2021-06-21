@@ -1,15 +1,24 @@
-// const LocalUserModel = require('../LocalModels/user');
-// const db = require("../DbModels/index");
-// const UserModel = db.userModel;
 const JwtTokenHelper = require('../Helpers/jwtTokenHelper');
 const { User } = require('../../models');
 const bcrypt = require('bcrypt');
 const StatusMessage = require('../Constants/statusMessages');
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const { googleClientId } = require('../../config');
-
-
 const client = new OAuth2Client(googleClientId);
+
+function loginJwtToken(user) {
+    let obj = {
+        userId: user.id,
+        email: user.email
+    }
+    let jwtToken = JwtTokenHelper.tokenGenerator(obj, '1 day');
+    return jwtToken;
+}
+
+async function authenticate(loginPassword, hashPassword) {
+    const result = await bcrypt.compare(loginPassword, hashPassword);
+    return result;
+}
 
 async function findByCredentials(userData) {
     try {
@@ -22,17 +31,17 @@ async function findByCredentials(userData) {
             }
         });
         if (!user) {
-            response.message = StatusMessage.Login_Invalid_Email_Message;
+            response.message = StatusMessage.Login_Invalid_Email;
             return (response);
         }
         if (user && await authenticate(userData.password, user.dataValues.password)) {
             response.isLoginSuccess = true;
-            response.message = StatusMessage.Login_Success_Messages;
+            response.message = StatusMessage.Login_Success;
             response.user = user.dataValues;
             return (response);
         }
         else {
-            response.message = StatusMessage.Login_Invalid_Password_Message;
+            response.message = StatusMessage.Login_Invalid_Password;
             return (response);
         }
     } catch (error) {
@@ -49,50 +58,49 @@ async function findByGoogleToken(token) {
             isLoginSuccess: false
         }
         let googleResponse = await client.verifyIdToken({
-            idToken: token, 
+            idToken: token,
             audience: googleClientId
         });
         userEmail = googleResponse.getPayload().email;
-        if(userEmail){
+        if (userEmail) {
             let user = await User.findOne({
                 where: {
                     email: userEmail.toLowerCase()
                 }
             });
             if (!user) {
-                response.message = StatusMessage.Login_Invalid_Email_Message;
+                response.message = StatusMessage.Login_Invalid_Email;
                 return (response);
             }
-            else{
+            else {
                 response.isLoginSuccess = true;
-                response.message = StatusMessage.Login_Success_Messages;
+                response.message = StatusMessage.Login_Success;
                 response.user = user.dataValues;
                 return (response);
             }
         }
         else {
-            response.message("Google login verfication failed");
+            response.message(StatusMessage.Google_Verification_Failed);
             return response;
         }
-        
-                   
+
+
     } catch (error) {
         console.log(error);
         return (error);
     }
 };
 
-
 module.exports.googleLoginUser = async (userData) => {
     try {
         let data = await findByGoogleToken(userData.token);
         let response = {
-            isLoginSuccess: data.isLoginSuccess, 
-            message: data.message, 
+            isLoginSuccess: data.isLoginSuccess,
+            message: data.message,
         };
         if (response.isLoginSuccess) {
-            let jwtToken = loginJwtToken(data.user); 
-            response.jwtToken = jwtToken 
+            let jwtToken = loginJwtToken(data.user);
+            response.jwtToken = jwtToken
             return response;
         }
         else {
@@ -103,19 +111,17 @@ module.exports.googleLoginUser = async (userData) => {
         return error;
     }
 }
-
-
 
 module.exports.loginUser = async (userData) => {
     try {
         let data = await findByCredentials(userData);
         let response = {
-            isLoginSuccess: data.isLoginSuccess, 
-            message: data.message, 
+            isLoginSuccess: data.isLoginSuccess,
+            message: data.message,
         };
         if (response.isLoginSuccess) {
-            let jwtToken = loginJwtToken(data.user); 
-            response.jwtToken = jwtToken 
+            let jwtToken = loginJwtToken(data.user);
+            response.jwtToken = jwtToken
             return response;
         }
         else {
@@ -127,16 +133,3 @@ module.exports.loginUser = async (userData) => {
     }
 }
 
-function loginJwtToken(user) {
-    let obj = {
-        userId: user.id,
-        email: user.email
-    }
-    let jwtToken = JwtTokenHelper.tokenGenerator(obj, '1 day');
-    return jwtToken;
-}
-
-async function authenticate(loginPassword, hashPassword) {
-    const result = await bcrypt.compare(loginPassword, hashPassword);
-    return result;
-}

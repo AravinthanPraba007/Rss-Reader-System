@@ -2,7 +2,6 @@ const RssSiteService = require('../Services/rssSitesService');
 const RssSiteFeedService = require('../Services/rssSiteFeedsService');
 const StoreRssSiteFeedService = require('../Services/storeRssSiteFeedsService');
 const StoreRssSiteService = require('../Services/addRssSiteService');
-
 const Boom = require('boom');
 const { storeFeed } = require('../Helpers/feedHelper');
 const { feedStore } = require('../Helpers/feedStoreHelper');
@@ -16,7 +15,25 @@ module.exports.getAvailableRssSites = async (request, reply) => {
     } catch (error) {
         return reply(Boom.boomify(error));
     }
+}
 
+module.exports.addRssSite = async (request, reply) => {
+    try {
+        let rssFeedUrl = request.payload.rssFeedUrl;
+        let data = await StoreRssSiteService.addRssSite(rssFeedUrl);
+        if (data.isRssSiteAdded) {
+            let response = reply({ message: data.message });
+            response.code(200);
+            return response;
+        }
+        else {
+            let response = reply({ message: data.message });
+            response.code(500);
+            return response;
+        }
+    } catch (error) {
+        return reply(Boom.boomify(error));
+    }
 }
 
 module.exports.getRssSiteFeeds = async (request, reply) => {
@@ -36,7 +53,6 @@ module.exports.getRssSiteFeeds = async (request, reply) => {
     } catch (error) {
         return reply(Boom.boomify(error));
     }
-
 }
 
 module.exports.getRssSiteFeedsFromWeb = async (request, reply) => {
@@ -56,7 +72,6 @@ module.exports.getRssSiteFeedsFromWeb = async (request, reply) => {
     } catch (error) {
         return reply(Boom.boomify(error));
     }
-
 }
 
 module.exports.getRssSiteFromWeb = async (request, reply) => {
@@ -76,7 +91,6 @@ module.exports.getRssSiteFromWeb = async (request, reply) => {
     } catch (error) {
         return reply(Boom.boomify(error));
     }
-
 }
 
 module.exports.getFullRssSiteDetailsFromWeb = async (request, reply) => {
@@ -104,7 +118,7 @@ module.exports.storeRssSiteFeeds = async (request, reply) => {
         let rssFeedUrl = request.payload.rssFeedUrl;
         let data = await StoreRssSiteFeedService.storeRssSiteFeeds(rssFeedUrl);
         if (data.isFeedsStored) {
-            let response = reply({ message: data.message});
+            let response = reply({ message: data.message });
             response.code(200);
             return response;
         }
@@ -116,37 +130,16 @@ module.exports.storeRssSiteFeeds = async (request, reply) => {
     } catch (error) {
         return reply(Boom.boomify(error));
     }
-
 }
-
 
 module.exports.storeFeeds = async (request, reply) => {
     try {
         let data = await feedStore();
-        let response = reply({ message: data.message});
+        let response = reply({ message: data.message });
         response.code(200);
         return response;
     } catch (error) {
         return reply(Boom.boomify(error));
     }
-
 }
 
-module.exports.addRssSite = async (request, reply) => {
-    try {
-        let rssFeedUrl = request.payload.rssFeedUrl;
-        let data = await StoreRssSiteService.addRssSite(rssFeedUrl);
-        if(data.isRssSiteAdded) {
-            let response = reply({ message: data.message});
-            response.code(200);
-            return response;
-        }
-        else{
-            let response = reply({ message: data.message });
-            response.code(500);
-            return response;
-        }
-    } catch (error) {
-        return reply(Boom.boomify(error));
-    }
-}

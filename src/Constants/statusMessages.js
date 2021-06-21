@@ -1,9 +1,11 @@
 const statusMessages = {
-    Signup_Success_Message : 'Sign up successfully',
-    Signup_Already_User_Exist_Message : 'User already exist',
-    Login_Success_Messages : 'Successfully logged-in',
-    Login_Invalid_Email_Message : 'Invalid Email Id provided',
-    Login_Invalid_Password_Message : 'Invalid password',
+    Signup_Success : 'Sign up successfully',
+    Signup_Already_User_Exist : 'User already exist',
+    Google_Verification_Failed : 'Google login verfication failed',
+    Login_Success : 'Successfully logged-in',
+    Login_Invalid_Email : 'Invalid Email Id provided',
+
+    Login_Invalid_Password : 'Invalid password provided',
     Add_Rss_Subscription_Invalid_UserID : "UserId not correct",
     Add_Rss_Subscription_Success_Message : "Rss feed Subscribed Sucessfully",
     Add_Rss_Subscription_Already_Subscribed_Message : "Already Subscribed to this rss site",

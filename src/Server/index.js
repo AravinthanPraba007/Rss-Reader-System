@@ -1,29 +1,26 @@
 const Hapi = require('hapi');
+
 const AuthRouters = require('../Routers/authRouters');
 const RssSubscriptionRouters = require('../Routers/rssSubscriptionRouters');
 const RssSiteRouters = require('../Routers/rssSiteRouter');
 const RssSiteFeedRouters = require('../Routers/rssSiteFeedRouters');
 
-
-const server = new Hapi.Server();
 const AuthJwt = require('hapi-auth-jwt2');
 const UserHelper = require('../Helpers/userHelper');
-const { triggerJob, sampleQueue } = require('../Jobs/queues/sampleQueue');
-const BullUi = require('../Jobs/bullUi');
-var matador = require('bull-ui/app');
 
-const { createBullBoard } = require('@bull-board/api');
-const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
-const { HapiAdapter } = require('@bull-board/hapi');
+const BullUi = require('../Jobs/bullUi');
+
 const Path = require('path');
 const { triggerFeedFetchJob } = require('../Jobs/queues/fetchFeedsQueue');
+
 // Configure the server to start the host and port
+const server = new Hapi.Server();
 server.connection({
   port: 8080,
   host: 'localhost',
   routes: {
     cors: {
-      origin: ['*'] // an array of origins or 'ignore'           
+      origin: ['*']
     },
     files: {
       relativeTo: Path.join(__dirname, '')
@@ -43,16 +40,6 @@ const validate = async function (decoded, request, callback) {
 
 const init = async () => {
 
-  const serverAdapter = new HapiAdapter();
-
-  createBullBoard({
-    queues: [new BullMQAdapter(sampleQueue)],
-    serverAdapter,
-  });
-
-
-
-
   await server.register(AuthJwt);
   server.auth.strategy('jwt', 'jwt',
     {
@@ -60,6 +47,7 @@ const init = async () => {
       validateFunc: validate,
       verifyOptions: { algorithms: ['HS256'] }
     });
+
   server.auth.default('jwt');
 
   console.log("--- Adding Auth Routers ---");
@@ -91,8 +79,6 @@ const init = async () => {
 
 };
 
-
-
 process.on('unhandledRejection', (err) => {
   console.log(err);
   process.exit(1);
@@ -100,5 +86,4 @@ process.on('unhandledRejection', (err) => {
 
 init();
 // BullUi.initBullUi();
-// triggerJob();
 triggerFeedFetchJob();
