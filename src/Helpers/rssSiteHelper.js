@@ -15,7 +15,6 @@ module.exports.addNewRssSite = async function (rssFeedUrl) {
          */
             let rssFetchData = await FeedParser.rssParser(rssFeedUrl);
             if (rssFetchData.statusCode && rssFetchData.statusCode === 200) {
-
                 let newRssDetails = {};
                 newRssDetails.rssFeedUrl = rssFeedUrl;
                 if (rssFetchData.content && rssFetchData.content.head) {
