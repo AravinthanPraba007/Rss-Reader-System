@@ -6,6 +6,11 @@ const JwtTokenHelper = require('../Helpers/jwtTokenHelper');
 const {User} = require('../../models');
 const bcrypt = require('bcrypt');
 const StatusMessage = require('../Constants/statusMessages');
+const {OAuth2Client} = require('google-auth-library');
+const { googleClientId } = require('../../config');
+
+
+const client = new OAuth2Client(googleClientId);
 
 async function isUserAlreadyExist(email) {
     try {
@@ -47,6 +52,52 @@ module.exports.signUpUser = async (userData) => {
         } catch (error) {
             return error;
         }
+};
+
+
+module.exports.googleSignUpUser = async (userData) => {
+    try {
+
+        let response ={
+            isGoogleVerifyFailed : false,
+            isConflictOccured : false
+        }
+        let userEmail;
+        let userName;
+        let googleResponse = await client.verifyIdToken({
+            idToken: userData.token, 
+            audience: googleClientId
+        });
+        userEmail = googleResponse.getPayload().email;
+        userName = googleResponse.getPayload().name;
+        console.log(googleResponse.getPayload());
+        if(userEmail){
+            let data = await isUserAlreadyExist(userEmail);
+                if (data) {
+                    response.isConflictOccured = true;
+                    response.message = StatusMessage.Signup_Already_User_Exist_Message;
+                    return response;
+                } else {
+                    const saltRound = 10;
+                    const hashPassword = await bcrypt.hash("findme", saltRound);
+                    let savedUser = await User.create({name: userName, email: userEmail, password: hashPassword});
+                    let jwtToken = signUpJwtToken(savedUser.dataValues);
+                    response.message = StatusMessage.Signup_Success_Message;
+                    response.jwtToken = jwtToken;
+                    return response;
+                }
+        }
+        else {
+            response.message("Google login verfication failed");
+            return response;
+        }
+
+
+
+       
+    } catch (error) {
+        return error;
+    }
 };
 
 function signUpJwtToken(user) {;

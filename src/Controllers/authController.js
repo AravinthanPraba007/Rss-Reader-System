@@ -57,3 +57,27 @@ module.exports.userGoogleLogin = async (user, reply) => {
     }
     
 }
+
+module.exports.userGoogleSignup = async (user, reply) => {
+
+    try {
+        let data = await SignupHelper.googleSignUpUser(user);
+    if(data.isGoogleVerifyFailed){
+        let response = reply({ message: data.message});
+        response.code(500);
+        return response;
+    }
+    if (data.isConflictOccured) {
+        return reply(Boom.conflict(data.message));
+    }
+    else {
+        let response = reply({ message: data.message, token: data.jwtToken  });
+        response.code(201);
+        response.header('Authorization', data.jwtToken);
+        return response;
+    }
+    } catch (error) {
+        return reply(Boom.boomify(error));
+    }
+    
+}

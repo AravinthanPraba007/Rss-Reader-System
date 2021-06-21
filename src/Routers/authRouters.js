@@ -12,11 +12,28 @@ module.exports = [
                     name: Joi.string().required(),
                     email: Joi.string().email().required(),
                     password: Joi.string().required()
-
+                    
                 })
             },
             handler: async (request, reply) => {
                 return AuthController.userSignup(request.payload, reply);
+            }
+        }
+    },
+    {
+        method: 'post',
+        path: '/googleSignup',
+        
+        config: {
+            auth: false,
+            validate: {
+                payload: Joi.object({
+                    token: Joi.string().required()
+
+                })
+            },
+            handler: async (request, reply) => {
+                return AuthController.userGoogleSignup(request.payload, reply);
             }
         }
     },
