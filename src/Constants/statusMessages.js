@@ -4,8 +4,12 @@ const statusMessages = {
     Google_Verification_Failed : 'Google login verfication failed',
     Login_Success : 'Successfully logged-in',
     Login_Invalid_Email : 'Invalid Email Id provided',
-
     Login_Invalid_Password : 'Invalid password provided',
+
+    User_Subscription_Feeds_Fetched_Success : "User subscription feeds fetched successfully",
+    Site_Feeds_Fetched_Success : "Site feeds fetched successfully",
+
+
     Add_Rss_Subscription_Invalid_UserID : "UserId not correct",
     Add_Rss_Subscription_Success_Message : "Rss feed Subscribed Sucessfully",
     Add_Rss_Subscription_Already_Subscribed_Message : "Already Subscribed to this rss site",
