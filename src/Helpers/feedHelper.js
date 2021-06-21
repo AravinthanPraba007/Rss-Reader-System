@@ -12,12 +12,12 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
             if (fetchRequired) {
                 if (rssFetchData && rssFetchData.statusCode && rssFetchData.statusCode === 200) {
                     let rssHeadDetails = rssFetchData.content.head;
-                    if(rssSite.pubDate){
-                       if(rssHeadDetails.pubDate > rssSite.pubDate) {
-                        response.isFeedsStored = true;
-                        response.message = StatusMessage.No_New_Feed_Published;
-                        return response;
-                       }
+                    if (rssSite.pubDate) {
+                        if (rssHeadDetails.pubDate > rssSite.pubDate) {
+                            response.isFeedsStored = true;
+                            response.message = StatusMessage.No_New_Feed_Published;
+                            return response;
+                        }
                     }
                     /**
                      * 1. Store rss_id, title, link, description, summary, guid, pubDate in rss_feed
@@ -25,7 +25,7 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
                      */
                     const rssSiteId = rssSite.id;
                     const rssFeedItemsDetails = rssFetchData.content.items;
-                    const latestFeeds = rssFeedItemsDetails.map((item)=> {
+                    const latestFeeds = rssFeedItemsDetails.map((item) => {
                         return {
                             rss_id: rssSiteId,
                             title: item.title,
@@ -35,13 +35,13 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
                             guid: item.guid,
                             pubDate: item.pubDate
                         };
-                        
+
                     })
                     const createdFeeds = await RssFeed.bulkCreate(latestFeeds);
 
                     const latestFeedFetchedAt = new Date();
                     const lastestPubDate = rssHeadDetails.pubDate;
-                    const updatedRssSite = await RssSite.update({lastFeedFetchedAt: latestFeedFetchedAt, lastPubDate:lastestPubDate }, {
+                    const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt, lastPubDate: lastestPubDate }, {
                         where: {
                             id: rssSite.id
                         }
@@ -76,17 +76,17 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
 function feedsFetchRequired(lastFeedFetchedAt) {
     try {
         const fetchFrequency = 60;
-        if(lastFeedFetchedAt){
-            
+        if (lastFeedFetchedAt) {
+
             let currentTime = new Date();
             let nextFetchRequired = new Date(lastFeedFetchedAt);
             nextFetchRequired.setMinutes(nextFetchRequired.getMinutes() + fetchFrequency);
-            
-            if(nextFetchRequired > currentTime) {
+
+            if (nextFetchRequired > currentTime) {
                 return false;
             }
         }
-        return true;     
+        return true;
     } catch (error) {
         throw new Error(error);
     }

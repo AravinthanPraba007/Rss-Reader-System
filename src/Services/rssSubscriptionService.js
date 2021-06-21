@@ -12,15 +12,15 @@ module.exports.addRssSubcriptionByUrl = async (userData) => {
     4. If not add the site to user subscription
     */
     try {
-        let response  = {
-            isSubscriptionSuccess : false
+        let response = {
+            isSubscriptionSuccess: false
         }
         let rssIdAlreadyExist = await isRssUrlExist(userData.rssFeedUrl);
         let rssSiteId;
         if (!rssIdAlreadyExist) {
             let data = await RssSiteHelper.addNewRssSite(userData.rssFeedUrl);
-            if(data.isRssSiteStored){
-                if( data.rssSiteId) {
+            if (data.isRssSiteStored) {
+                if (data.rssSiteId) {
                     rssSiteId = data.rssSiteId;
                 }
                 else {
@@ -38,30 +38,30 @@ module.exports.addRssSubcriptionByUrl = async (userData) => {
         }
 
         let userSubscriptionPresent = await isUserSubscriptionPresentwithSoftDelete(userData.userId, rssSiteId);
-            if (userSubscriptionPresent) {
-                if (userSubscriptionPresent.deletedAt) {
-                    let savedSubscription = await UserRssSubscription.restore({
-                        where: {
-                            id: userSubscriptionPresent.id
-                        }
-                    })
-                    response.isSubscriptionSuccess = true;
-                    response.message = StatusMessage.Subscribe_Success;
-                    return response;
-                }
-                else{
-                response.isSubscriptionSuccess = true;
-                response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
-                return response;
-                }
-                
-            }
-            else {
-                let savedSubscription = await UserRssSubscription.create({ rss_id: rssSiteId, user_id: userData.userId });
+        if (userSubscriptionPresent) {
+            if (userSubscriptionPresent.deletedAt) {
+                let savedSubscription = await UserRssSubscription.restore({
+                    where: {
+                        id: userSubscriptionPresent.id
+                    }
+                })
                 response.isSubscriptionSuccess = true;
                 response.message = StatusMessage.Subscribe_Success;
                 return response;
             }
+            else {
+                response.isSubscriptionSuccess = true;
+                response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
+                return response;
+            }
+
+        }
+        else {
+            let savedSubscription = await UserRssSubscription.create({ rss_id: rssSiteId, user_id: userData.userId });
+            response.isSubscriptionSuccess = true;
+            response.message = StatusMessage.Subscribe_Success;
+            return response;
+        }
     }
     catch (error) {
         return error;
@@ -70,12 +70,12 @@ module.exports.addRssSubcriptionByUrl = async (userData) => {
 
 module.exports.manageRssSubcription = async (userData) => {
     try {
-        let response  = {
-            isActionSuccess : false
+        let response = {
+            isActionSuccess: false
         }
 
-        if((userData.action) === 'subscribe') {
-            if(!userData.rssId) {
+        if ((userData.action) === 'subscribe') {
+            if (!userData.rssId) {
                 response.message = "Rss Site id is Required";
                 return response;
             }
@@ -91,12 +91,12 @@ module.exports.manageRssSubcription = async (userData) => {
                     response.message = StatusMessage.Subscribe_Success;
                     return response;
                 }
-                else{
-                response.isActionSuccess = true;
-                response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
-                return response;
+                else {
+                    response.isActionSuccess = true;
+                    response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
+                    return response;
                 }
-                
+
             }
             else {
                 let savedSubscription = await UserRssSubscription.create({ rss_id: userData.rssId, user_id: userData.userId });
@@ -105,8 +105,8 @@ module.exports.manageRssSubcription = async (userData) => {
                 return response;
             }
         }
-        else if((userData.action) === 'unsubscribe') {
-            if(!userData.subscriptionId) {
+        else if ((userData.action) === 'unsubscribe') {
+            if (!userData.subscriptionId) {
                 response.message = "Subscrption id is Required";
                 return response;
             }
@@ -133,7 +133,7 @@ module.exports.manageRssSubcription = async (userData) => {
         }
 
 
-        
+
     }
     catch (error) {
         console.log(error);
