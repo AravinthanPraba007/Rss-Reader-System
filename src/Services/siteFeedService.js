@@ -4,6 +4,9 @@ const StatusMessage = require('../Constants/statusMessages');
 
 module.exports.getSiteFeed = async function (siteData) {
     try {
+        // Offset value is the starting point for each page  
+        // Example for page 1 => offset = 1, page 2 => offset = 10 , 
+        // offset = (subract one from page no and mulitply by 10)
         let offsetValue = (siteData.page - 1) * 10;
         let response = {
             isSiteFeedsFetched: false,
