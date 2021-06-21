@@ -35,5 +35,21 @@ module.exports = [
                 return AuthController.userLogin(request.payload, reply);
             }
         }
-    }
+    },
+    {
+        method: 'post',
+        path: '/googleLogin',
+        config: {
+            auth: false,
+            validate: {
+                payload: Joi.object({
+                        token: Joi.string().required()
+                })
+            },
+            handler: async (request, reply) => {
+                return AuthController.userGoogleLogin(request.payload, reply);
+            }
+        }
+    },
+
 ]

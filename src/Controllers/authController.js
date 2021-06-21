@@ -38,3 +38,22 @@ module.exports.userLogin = async (user, reply) => {
     }
     
 }
+
+
+module.exports.userGoogleLogin = async (user, reply) => {
+    try {
+        let data = await LoginHelper.googleLoginUser(user);
+    if (!data.isLoginSuccess) {
+        return reply(Boom.unauthorized(data.message));
+    }
+    else {
+        let response = reply({ message: data.message, token: data.jwtToken });
+        response.code(200);
+        response.header('Authorization', data.jwtToken);
+        return response;
+    }
+    } catch (error) {
+        return reply(Boom.boomify(error));
+    }
+    
+}
