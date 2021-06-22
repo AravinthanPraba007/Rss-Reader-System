@@ -31,6 +31,8 @@ const statusMessages = {
     Already_Subscribed_Message : "Already Subscribed to this rss site",
     Fetch_Rss_Subscription_List_Success : "Sucessfully fetched the Subscription list",
 
+    Stored_Site_Details_To_Redis : "Stored the Site details to redis",
+    No_Site_Details_Found_In_Redis  : "No Site Data found in redis",
 }
 
 module.exports = statusMessages;

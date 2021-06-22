@@ -5,6 +5,7 @@ const StoreRssSiteService = require('../Services/addRssSiteService');
 const Boom = require('boom');
 const { storeFeed } = require('../Helpers/feedHelper');
 const { feedStore } = require('../Helpers/feedStoreHelper');
+const RedisHelper = require('../Helpers/redisHelper');
 
 module.exports.getAvailableRssSites = async (request, reply) => {
     try {
@@ -143,3 +144,33 @@ module.exports.storeFeeds = async (request, reply) => {
     }
 }
 
+module.exports.storeAvailableRssSitesToRedis = async (request, reply) => {
+    try {
+        let data = await RedisHelper.pushAvailableSites();
+        let response = reply({ message: data.message });
+        response.code(200);
+        return response;
+    } catch (error) {
+        return reply(Boom.boomify(error));
+    }
+}
+
+module.exports.getAvailableRssSitesFromRedis = async (request, reply) => {
+    try {
+        let data = await RedisHelper.getAvailableSites();
+        if (data.isSiteDetailsFetched) {
+            let response = reply({ message: data.message, rssSiteList: data.rssSiteList });
+            response.code(200);
+            return response;
+        }
+        else {
+            let response = reply({ message: data.message });
+            response.code(500);
+            return response;
+        }
+        return response;
+    } catch (error) {
+        console.log(error);
+        return reply(Boom.boomify(error));
+    }
+}

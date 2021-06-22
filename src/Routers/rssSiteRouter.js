@@ -116,5 +116,28 @@ module.exports = [
             }
         }
     },
-
+    {
+        method: 'GET',
+        path: '/storeAvailableRssSitesToRedis',
+        config: {
+            auth: false,
+            validate: {
+            },
+            handler: async (request, reply) => {
+                return RssSiteController.storeAvailableRssSitesToRedis(request, reply);
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/getAvailableRssSitesFromRedis',
+        config: {
+            auth: false,
+            validate: {
+            },
+            handler: async (request, reply) => {
+                return RssSiteController.getAvailableRssSitesFromRedis(request, reply);
+            }
+        }
+    },
 ]

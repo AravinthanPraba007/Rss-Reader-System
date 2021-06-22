@@ -1,9 +1,18 @@
 const { RssSite } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
 const FeedParser = require('../Helpers/feedReaderHelper');
+const RedisHelper = require('../Helpers/redisHelper');
 
 module.exports.getAvaliableRssSites = async () => {
     try {
+        let redisData = await RedisHelper.getAvailableSites();
+        if(redisData && redisData.isSiteDetailsFetched) {
+            let response = {
+                message: StatusMessage.Available_Rss_Sites_Fetched_Success,
+                rssSubscriptions: redisData.rssSiteList
+            };
+            return response;
+        }
         let rssSiteList = await RssSite.findAll();
         let response = {
             message: StatusMessage.Available_Rss_Sites_Fetched_Success,
