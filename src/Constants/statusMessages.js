@@ -28,18 +28,8 @@ const statusMessages = {
     FeedParser_Failed : "Feed parser result did not produce 200 Status code",
     Rss_Details_Error : "Proper Rss detail is not present",
 
-
-    Add_Rss_Subscription_Invalid_UserID : "UserId not correct",
-    Add_Rss_Subscription_Already_Subscribed_Message : "Already Subscribed to this rss site",
+    Already_Subscribed_Message : "Already Subscribed to this rss site",
     Fetch_Rss_Subscription_List_Success : "Sucessfully fetched the Subscription list",
-    
-    Feed_Fetch_And_Store_Success_Message : "Rss Feed fetched and Stored Successfully",
-
-    
-    
-
-    
-    
 
 }
 

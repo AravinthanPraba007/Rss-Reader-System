@@ -51,7 +51,7 @@ module.exports.addRssSubcriptionByUrl = async (userData) => {
             }
             else {
                 response.isSubscriptionSuccess = true;
-                response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
+                response.message = StatusMessage.Already_Subscribed_Message
                 return response;
             }
 
@@ -93,7 +93,7 @@ module.exports.manageRssSubcription = async (userData) => {
                 }
                 else {
                     response.isActionSuccess = true;
-                    response.message = StatusMessage.Add_Rss_Subscription_Already_Subscribed_Message
+                    response.message = StatusMessage.Already_Subscribed_Message
                     return response;
                 }
 
