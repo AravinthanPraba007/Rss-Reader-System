@@ -2,7 +2,7 @@ const { feedStore } = require('../../Helpers/feedStoreHelper');
 const { feedStoreHelper } = require('../jobHelper/feedsStoreJobHelper');
 const { sampleQueue } = require('../queues/sampleQueue');
 
-module.exports.sampleProcessor = async (job,done) => {
+module.exports.sampleProcessor = async (job, done) => {
     console.log("Executing the job");
     console.log(job);
     const feedWorkData = await feedStoreHelper();
@@ -12,5 +12,4 @@ module.exports.sampleProcessor = async (job,done) => {
     console.log(feedStore.sucessMessage);
     console.log(new Date());
     done();
-    
 }

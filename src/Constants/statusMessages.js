@@ -26,6 +26,8 @@ const statusMessages = {
     Without_RssSiteDetails_Error : "Without rss Site details We cant fetch the feeds",
     Pub_Date_Not_Present_Error : "Feed parser result is not having pub date",
     FeedParser_Failed : "Feed parser result did not produce 200 Status code",
+    Rss_Details_Error : "Proper Rss detail is not present",
+
 
     Add_Rss_Subscription_Invalid_UserID : "UserId not correct",
     Add_Rss_Subscription_Already_Subscribed_Message : "Already Subscribed to this rss site",
