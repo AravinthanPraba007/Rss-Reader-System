@@ -57,4 +57,19 @@ module.exports = [
             }
         }
     },
+    {
+        method: 'POST',
+        path: '/searchFeed',
+        config: {
+            auth: false,
+            validate: {
+                payload: Joi.object({
+                    searchText: Joi.string().required(),
+                })
+            },
+            handler: async (request, reply) => {
+                return RssSiteFeedController.getSearchFeeds(request, reply);
+            }
+        }
+    },
 ]

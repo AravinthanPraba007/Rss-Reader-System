@@ -1,6 +1,6 @@
 const UserFeedService = require('../Services/userFeedService');
 const SiteFeedService = require('../Services/siteFeedService');
-const StoreFeedsToKibana = require('../Services/storeFeedsToKibana');
+const KibanaFeeds = require('../Services/kibanaFeedsService');
 const JwtHelper = require('../Helpers/jwtTokenHelper');
 const Boom = require('boom');
 
@@ -82,10 +82,32 @@ module.exports.getAvailableFeeds = async (request, reply) => {
 module.exports.pushFeeds = async (request, reply) => {
     try {
         
-        let data = await StoreFeedsToKibana.pushFeeds();
+        let data = await KibanaFeeds.pushFeeds();
 
         if (data.isFeedsStored) {
             let response = reply({ message: data.message});
+            response.code(200);
+            return response;
+        }
+        else {
+            let response = reply({ message: data.message });
+            response.code(500);
+            return response;
+        }
+
+    } catch (error) {
+        console.log(error);
+        return reply(Boom.boomify(error));
+    }
+}
+
+module.exports.getSearchFeeds = async (request, reply) => {
+    try {
+        let searchText = request.payload.searchText
+        let data = await KibanaFeeds.searchFeeds(searchText);
+    
+        if (data.isSearchDone) {
+            let response = reply({ message: data.message, feeds: data.searchFeeds });
             response.code(200);
             return response;
         }
