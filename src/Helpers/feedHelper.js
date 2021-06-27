@@ -12,8 +12,17 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
             if (fetchRequired) {
                 if (rssFetchData && rssFetchData.statusCode && rssFetchData.statusCode === 200) {
                     let rssHeadDetails = rssFetchData.content.head;
+                    if (isNaN((rssHeadDetails.pubDate).getTime())) {
+                        rssHeadDetails.pubDate = null
+                    }
                     if (rssSite.pubDate) {
-                        if (rssHeadDetails.pubDate > rssSite.pubDate) {
+                        if (rssHeadDetails.pubDate <= rssSite.pubDate) {
+                            const latestFeedFetchedAt = new Date();
+                            const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt }, {
+                                where: {
+                                    id: rssSite.id
+                                }
+                            });
                             response.isFeedsStored = true;
                             response.message = StatusMessage.No_New_Feed_Published;
                             return response;
@@ -26,6 +35,9 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
                     const rssSiteId = rssSite.id;
                     const rssFeedItemsDetails = rssFetchData.content.items;
                     const latestFeeds = rssFeedItemsDetails.map((item) => {
+                        if (isNaN((item.pubDate).getTime())) {
+                            item.pubDate = null
+                        }
                         return {
                             rss_id: rssSiteId,
                             title: item.title,
@@ -37,8 +49,10 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
                         };
 
                     })
-                    const createdFeeds = await RssFeed.bulkCreate(latestFeeds);
-
+                    const createdFeeds = await RssFeed.bulkCreate(latestFeeds, { ignoreDuplicates: true, returning: true });
+                    console.log("---- bulk create response -----");
+                    console.log(createdFeeds);
+                    console.log("--------------------------------");
                     const latestFeedFetchedAt = new Date();
                     const lastestPubDate = rssHeadDetails.pubDate;
                     const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt, lastPubDate: lastestPubDate }, {

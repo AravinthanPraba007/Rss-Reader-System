@@ -19,12 +19,21 @@ module.exports.fetchAndStoreFeed = async function (rssFeedUrl) {
                 let rssFetchData = await FeedParser.rssParser(rssFeedUrl);
                 if (rssFetchData.statusCode && rssFetchData.statusCode === 200) {
                     let rssHeadDetails = rssFetchData.content.head;
-                    if(rssSite.dataValues.pubDate){
-                       if(rssHeadDetails.pubDate > rssSite.dataValues.pubDate) {
-                        response.isFetchAndStoreDone = true;
-                        response.message = "No new feed Published, try after some time"
-                        return response;
-                       }
+                    if (isNaN((rssHeadDetails.pubDate).getTime())) {
+                        rssHeadDetails.pubDate = null
+                    }
+                    if (rssSite.dataValues.pubDate) {
+                        if (rssHeadDetails.pubDate <= rssSite.dataValues.pubDate) {
+                            response.isFetchAndStoreDone = true;
+                            response.message = "No new feed Published, try after some time"
+                            const latestFeedFetchedAt = new Date();
+                            const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt }, {
+                                where: {
+                                    id: rssSite.dataValues.id
+                                }
+                            });
+                            return response;
+                        }
                     }
                     /**
                      * 1. Store rss_id, title, link, description, summary, guid, pubDate in rss_feed
@@ -32,7 +41,10 @@ module.exports.fetchAndStoreFeed = async function (rssFeedUrl) {
                      */
                     const rssSiteId = rssSite.dataValues.id;
                     const rssFeedItemsDetails = rssFetchData.content.items;
-                    const latestFeeds = rssFeedItemsDetails.map((item)=> {
+                    const latestFeeds = rssFeedItemsDetails.map((item) => {
+                        if (isNaN((item.pubDate).getTime())) {
+                            item.pubDate = null
+                        }
                         return {
                             rss_id: rssSiteId,
                             title: item.title,
@@ -42,13 +54,15 @@ module.exports.fetchAndStoreFeed = async function (rssFeedUrl) {
                             guid: item.guid,
                             pubDate: item.pubDate
                         };
-                        
-                    })
-                    const createdFeeds = await RssFeed.bulkCreate(latestFeeds);
 
+                    })
+                    const createdFeeds = await RssFeed.bulkCreate(latestFeeds, { ignoreDuplicates: true, returning: true });
+                    console.log("---- bulk create response -----");
+                    console.log(createdFeeds);
+                    console.log("--------------------------------");
                     const latestFeedFetchedAt = new Date();
                     const lastestPubDate = rssHeadDetails.pubDate;
-                    const updatedRssSite = await RssSite.update({lastFeedFetchedAt: latestFeedFetchedAt, lastPubDate:lastestPubDate }, {
+                    const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt, lastPubDate: lastestPubDate }, {
                         where: {
                             id: rssSite.dataValues.id
                         }
@@ -82,19 +96,19 @@ module.exports.fetchAndStoreFeed = async function (rssFeedUrl) {
 function feedsFetchRequired(lastFeedFetchedAt) {
     try {
         const fetchFrequency = 60;
-        if(lastFeedFetchedAt){
-            
+        if (lastFeedFetchedAt) {
+
             let currentTime = new Date();
             let nextFetchRequired = new Date(lastFeedFetchedAt);
             nextFetchRequired.setMinutes(nextFetchRequired.getMinutes() + fetchFrequency);
-            
-            if(nextFetchRequired > currentTime) {
+
+            if (nextFetchRequired > currentTime) {
                 return false;
             }
         }
 
         return true;
-       
+
     } catch (error) {
         throw new Error(error);
     }

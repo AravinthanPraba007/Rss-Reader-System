@@ -12,6 +12,8 @@ const BullUi = require('../Jobs/bullUi');
 
 const Path = require('path');
 const { triggerFeedFetchJob } = require('../Jobs/queues/fetchFeedsQueue');
+const { elasticSearchHealth, elasticSearchPing } = require('../ElasticSearch/elasticsearchHelper');
+const { adddToTwitter } = require('../ElasticSearch/twitterIndex');
 
 // Configure the server to start the host and port
 const server = new Hapi.Server();
@@ -87,3 +89,6 @@ process.on('unhandledRejection', (err) => {
 init();
 // BullUi.initBullUi();
 triggerFeedFetchJob();
+elasticSearchPing()
+elasticSearchHealth();
+adddToTwitter();

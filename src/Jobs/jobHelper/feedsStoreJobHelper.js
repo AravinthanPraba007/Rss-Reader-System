@@ -25,10 +25,19 @@ module.exports.feedStoreHelper = async function () {
                     let rssFetchData = await FeedParser.rssParser(rssSite.url);
                     if (rssFetchData.statusCode && rssFetchData.statusCode === 200) {
                         let rssHeadDetails = rssFetchData.content.head;
-                        if (rssHeadDetails.pubDate && rssHeadDetails.pubDate != 'Invalid Date') {
+                        if (isNaN((rssHeadDetails.pubDate).getTime())) {
+                            rssHeadDetails.pubDate = null
+                        }
+                        if (rssHeadDetails.pubDate) {
                             if (rssSite.pubDate) {
-                                if (rssHeadDetails.pubDate > rssSite.pubDate) {
+                                if (rssHeadDetails.pubDate <= rssSite.pubDate) {
                                     response.sucessMessage.push(`${rssSite.url} -id:- ${rssSite.id} -- ${StatusMessage.No_New_Feed_Published}`);
+                                    const latestFeedFetchedAt = new Date();
+                                    const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt }, {
+                                        where: {
+                                            id: rssSite.id
+                                        }
+                                    });
                                     continue;
                                 }
                             }
@@ -39,7 +48,9 @@ module.exports.feedStoreHelper = async function () {
                             const rssSiteId = rssSite.id;
                             const rssFeedItemsDetails = rssFetchData.content.items;
                             const latestFeeds = rssFeedItemsDetails.map((item) => {
-
+                                if (isNaN((item.pubDate).getTime())) {
+                                    item.pubDate = null
+                                }
                                 return {
                                     rss_id: rssSiteId,
                                     title: item.title,
@@ -51,8 +62,10 @@ module.exports.feedStoreHelper = async function () {
                                 };
 
                             })
-                            const createdFeeds = await RssFeed.bulkCreate(latestFeeds);
-
+                            const createdFeeds = await RssFeed.bulkCreate(latestFeeds, { ignoreDuplicates: true, returning: true });
+                            console.log("---- bulk create response -----");
+                            console.log(createdFeeds);
+                            console.log("--------------------------------");
                             const latestFeedFetchedAt = new Date();
                             const lastestPubDate = rssHeadDetails.pubDate;
                             const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt, lastPubDate: lastestPubDate }, {

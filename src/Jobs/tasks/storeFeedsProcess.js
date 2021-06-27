@@ -59,7 +59,10 @@ async function doFetchAndStoreFeed(rssSite) {
                     pubDate: item.pubDate
                 };
             })
-            const createdFeeds = await RssFeed.bulkCreate(latestFeeds, { ignoreDuplicates: true });
+            const createdFeeds = await RssFeed.bulkCreate(latestFeeds, { ignoreDuplicates: true, returning: true });
+            console.log("---- bulk create response -----");
+            console.log(createdFeeds);
+            console.log("--------------------------------");
             const latestFeedFetchedAt = new Date();
             const lastestPubDate = rssHeadDetails.pubDate;
             const updatedRssSite = await RssSite.update({ lastFeedFetchedAt: latestFeedFetchedAt, lastPubDate: lastestPubDate }, {
