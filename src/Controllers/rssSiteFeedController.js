@@ -1,5 +1,6 @@
 const UserFeedService = require('../Services/userFeedService');
 const SiteFeedService = require('../Services/siteFeedService');
+const StoreFeedsToKibana = require('../Services/storeFeedsToKibana');
 const JwtHelper = require('../Helpers/jwtTokenHelper');
 const Boom = require('boom');
 
@@ -39,6 +40,52 @@ module.exports.getSiteFeeds = async (request, reply) => {
 
         if (data.isSiteFeedsFetched) {
             let response = reply({ message: data.message, feeds: data.siteFeeds });
+            response.code(200);
+            return response;
+        }
+        else {
+            let response = reply({ message: data.message });
+            response.code(500);
+            return response;
+        }
+
+    } catch (error) {
+        console.log(error);
+        return reply(Boom.boomify(error));
+    }
+}
+
+
+module.exports.getAvailableFeeds = async (request, reply) => {
+    try {
+        
+        let data = await SiteFeedService.getAvailableFeeds();
+
+        if (data.isFeedsFetched) {
+            let response = reply({ message: data.message, feeds: data.feeds });
+            response.code(200);
+            return response;
+        }
+        else {
+            let response = reply({ message: data.message });
+            response.code(500);
+            return response;
+        }
+
+    } catch (error) {
+        console.log(error);
+        return reply(Boom.boomify(error));
+    }
+}
+
+
+module.exports.pushFeeds = async (request, reply) => {
+    try {
+        
+        let data = await StoreFeedsToKibana.pushFeeds();
+
+        if (data.isFeedsStored) {
+            let response = reply({ message: data.message});
             response.code(200);
             return response;
         }

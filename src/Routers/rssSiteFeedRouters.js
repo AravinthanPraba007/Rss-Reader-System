@@ -33,4 +33,28 @@ module.exports = [
             }
         }
     },
+    {
+        method: 'GET',
+        path: '/availableFeeds',
+        config: {
+            auth: false,
+            validate: {
+            },
+            handler: async (request, reply) => {
+                return RssSiteFeedController.getAvailableFeeds(request, reply);
+            }
+        }
+    },
+    {
+        method: 'GET',
+        path: '/pushFeeds',
+        config: {
+            auth: false,
+            validate: {
+            },
+            handler: async (request, reply) => {
+                return RssSiteFeedController.pushFeeds(request, reply);
+            }
+        }
+    },
 ]

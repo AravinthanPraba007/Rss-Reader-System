@@ -29,3 +29,20 @@ module.exports.getSiteFeed = async function (siteData) {
         return error;
     }
 }
+
+module.exports.getAvailableFeeds = async function () {
+    try {
+        let response = {
+            isFeedsFetched: false,
+            feeds: []
+        };
+        let feeds = await RssFeed.findAll();
+        response.isFeedsFetched = true;
+        response.feeds = feeds;
+        response.message = StatusMessage.Site_Feeds_Fetched_Success;
+        return response;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
