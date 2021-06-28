@@ -6,7 +6,7 @@ const RedisHelper = require('../Helpers/redisHelper');
 module.exports.getAvaliableRssSites = async () => {
     try {
         let redisData = await RedisHelper.getAvailableSites();
-        if(redisData && redisData.isSiteDetailsFetched) {
+        if (redisData && redisData.isSiteDetailsFetched) {
             let response = {
                 message: StatusMessage.Available_Rss_Sites_Fetched_Success,
                 rssSubscriptions: redisData.rssSiteList
@@ -40,6 +40,36 @@ module.exports.getRssSiteFromWeb = async function (rssFeedUrl) {
         }
         else {
             response.message = data.message;
+            return response;
+        }
+
+
+
+    } catch (error) {
+        return error;
+    }
+}
+
+module.exports.getRssSiteDetails = async function (rssId) {
+    try {
+        let response = {
+            isRssSiteFetched: false,
+        }
+        let fetchedFeeds;
+        let rssSite = await RssSite.findOne({
+            where: {
+                id: rssId
+            }
+        });
+        console.log(rssSite);
+        if (rssSite && rssSite.dataValues) {
+            response.isRssSiteFetched = true;
+            response.message = StatusMessage.Rss_Detials_Fetched_Success;
+            response.rssSite = rssSite.dataValues;
+            return response;
+        }
+        else {
+            response.message = "No data found";
             return response;
         }
 

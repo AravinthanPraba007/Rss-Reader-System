@@ -76,6 +76,21 @@ module.exports = [
     },
     {
         method: 'POST',
+        path: '/getRssSiteDetails',
+        config: {
+            auth: false,
+            validate: {
+                payload: Joi.object({
+                    rssId: Joi.number().required()
+                })
+            },
+            handler: async (request, reply) => {
+                return RssSiteController.getRssSiteDetails(request, reply);
+            }
+        }
+    },
+    {
+        method: 'POST',
         path: '/getFullRssSiteDetailsFromWeb',
         config: {
             auth: false,

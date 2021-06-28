@@ -94,6 +94,25 @@ module.exports.getRssSiteFromWeb = async (request, reply) => {
     }
 }
 
+module.exports.getRssSiteDetails = async (request, reply) => {
+    try {
+        let rssId = request.payload.rssId;
+        let data = await RssSiteService.getRssSiteDetails(rssId)
+        if (data.isRssSiteFetched) {
+            let response = reply({ message: data.message, rssSite: data.rssSite });
+            response.code(200);
+            return response;
+        }
+        else {
+            let response = reply({ message: data.message });
+            response.code(500);
+            return response;
+        }
+    } catch (error) {
+        return reply(Boom.boomify(error));
+    }
+}
+
 module.exports.getFullRssSiteDetailsFromWeb = async (request, reply) => {
     try {
         let rssFeedUrl = request.payload.rssFeedUrl;
