@@ -8,6 +8,7 @@ module.exports.pushFeedsToKibana = async function (dataBody) {
             bulkData.push(data);
         }
     });
+    if(bulkData.length > 0)
     await FeedIndex.addFeeds(bulkData);
 }
 

@@ -2,6 +2,7 @@ const FeedParser = require('../../Helpers/feedReaderHelper');
 const { RssSite, RssFeed, sequelize } = require('../../../models');
 const { QueryTypes } = require('sequelize');
 const StatusMessage = require('../../Constants/statusMessages');
+const FeedKibanaHelper = require('../../ElasticSearch/feedHelper');
 
 module.exports.storeFeedsProcessor = async (job, done) => {
     console.log("Executing store feeds job");
@@ -62,6 +63,12 @@ async function doFetchAndStoreFeed(rssSite) {
             const createdFeeds = await RssFeed.bulkCreate(latestFeeds, { ignoreDuplicates: true, returning: true });
             console.log("---- bulk create response -----");
             console.log(createdFeeds);
+            let feedsdata = [];
+            createdFeeds.forEach(feed => {
+                feedsdata.push(feed.dataValues);
+            });
+            // console.log(feedsdata);
+            await FeedKibanaHelper.pushFeedsToKibana(feedsdata);
             console.log("--------------------------------");
             const latestFeedFetchedAt = new Date();
             const lastestPubDate = rssHeadDetails.pubDate;
