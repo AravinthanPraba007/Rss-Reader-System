@@ -42,9 +42,6 @@ module.exports.getRssSiteFromWeb = async function (rssFeedUrl) {
             response.message = data.message;
             return response;
         }
-
-
-
     } catch (error) {
         return error;
     }
@@ -55,25 +52,30 @@ module.exports.getRssSiteDetails = async function (rssId) {
         let response = {
             isRssSiteFetched: false,
         }
-        let fetchedFeeds;
-        let rssSite = await RssSite.findOne({
-            where: {
-                id: rssId
-            }
-        });
-        console.log(rssSite);
-        if (rssSite && rssSite.dataValues) {
+        let redisData = await RedisHelper.getSiteDetails(rssId);
+        if (redisData.isSiteDetailsFetched) {
             response.isRssSiteFetched = true;
             response.message = StatusMessage.Rss_Detials_Fetched_Success;
-            response.rssSite = rssSite.dataValues;
+            response.rssSite = redisData.siteData;
             return response;
         }
         else {
-            response.message = "No data found";
-            return response;
+            let rssSite = await RssSite.findOne({
+                where: {
+                    id: rssId
+                }
+            });
+            if (rssSite && rssSite.dataValues) {
+                response.isRssSiteFetched = true;
+                response.message = StatusMessage.Rss_Detials_Fetched_Success;
+                response.rssSite = rssSite.dataValues;
+                return response;
+            }
+            else {
+                response.message = "No data found";
+                return response;
+            }
         }
-
-
 
     } catch (error) {
         return error;

@@ -79,3 +79,39 @@ module.exports.addAvailableSite = async function (rssSite) {
         return response;
     }
 }
+
+
+module.exports.getSiteDetails = async function (rssId) {
+    let response = {
+        message: '',
+        isSiteDetailsFetched: false
+    }
+    return new Promise(function (resolve, reject) {
+        try {
+            client.hget("rss_site", rssId, function (err, results) {
+
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    if (results) {
+                        let rssSiteData = results;
+                        response.siteData = JSON.parse(rssSiteData);
+                        response.isSiteDetailsFetched = true;
+                        response.message = StatusMessage.Available_Rss_Sites_Fetched_Success;
+                        resolve(response);
+                    }
+                    else {
+                        response.message = StatusMessage.No_Site_Details_Found_In_Redis;
+                        resolve(response);
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.log(error);
+            response.message = error;
+            reject(response);
+        }
+    })
+}
