@@ -11,6 +11,7 @@ const FeedsRouters = require('../Routers/feedsRouters');
 const BullUi = require('../Jobs/bullUi');
 const { triggerFeedFetchJob } = require('../Jobs/queues/fetchFeedsQueue');
 const { elasticSearchHealth, elasticSearchPing } = require('../ElasticSearch/elasticsearchHelper');
+const { redisHealthCheck } = require('../Redis/redisHelper');
 
 // Configure the server to start the host and port
 const server = new Hapi.Server();
@@ -51,6 +52,10 @@ function checkElasticSearchHealth() {
   elasticSearchHealth();
 }
 
+function checkRedisHealth() {
+  redisHealthCheck();
+}
+
 function startBullJobs() {
   triggerFeedFetchJob();
 }
@@ -85,3 +90,4 @@ process.on('unhandledRejection', (err) => {
 serverInit();
 startBullJobs();
 checkElasticSearchHealth();
+checkRedisHealth();

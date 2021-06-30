@@ -1,8 +1,9 @@
-const redis = require('redis');
+const RedisHelper = require('./redisHelper');
 const StatusMessage = require('../Constants/statusMessages');
-const client = redis.createClient();
 const { RssSite, sequelize } = require('../../models');
 const { QueryTypes } = require('sequelize');
+
+const client = RedisHelper.client;
 
 module.exports.pushRssSitesToRedis = async function () {
     let response = {
