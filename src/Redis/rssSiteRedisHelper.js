@@ -4,7 +4,7 @@ const client = redis.createClient();
 const { RssSite, sequelize } = require('../../models');
 const { QueryTypes } = require('sequelize');
 
-module.exports.pushAvailableSites = async function () {
+module.exports.pushRssSitesToRedis = async function () {
     let response = {
         message: ''
     }
@@ -24,7 +24,7 @@ module.exports.pushAvailableSites = async function () {
     }
 }
 
-module.exports.getAvailableSites = async function () {
+module.exports.getAvailableSitesFromRedis = async function () {
     let response = {
         message: '',
         isSiteDetailsFetched: false
@@ -65,7 +65,7 @@ module.exports.getAvailableSites = async function () {
     })
 }
 
-module.exports.addAvailableSite = async function (rssSite) {
+module.exports.addRssSiteToRedis = async function (rssSite) {
     let response = {
         message: ''
     }
@@ -81,7 +81,7 @@ module.exports.addAvailableSite = async function (rssSite) {
 }
 
 
-module.exports.getSiteDetails = async function (rssId) {
+module.exports.getSiteDetailsFromRedis = async function (rssId) {
     let response = {
         message: '',
         isSiteDetailsFetched: false

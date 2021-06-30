@@ -1,7 +1,7 @@
 const FeedParser = require('../Helpers/feedReaderHelper');
 const { RssSite, RssFeed } = require('../../models');
 const FeedHelper = require('../Helpers/feedHelper');
-const RedisHelper = require('../Helpers/redisHelper');
+const RssSiteRedisHelper = require('../Redis/rssSiteRedisHelper');
 
 module.exports.addNewRssSite = async function (rssFeedUrl) {
 
@@ -46,7 +46,7 @@ module.exports.addNewRssSite = async function (rssFeedUrl) {
                 siteLink: savedRssSite.dataValues.siteLink,
                 imageUrl: savedRssSite.dataValues.imageUrl
             }
-            RedisHelper.addAvailableSite(redisRssSite);
+            RssSiteRedisHelper.addRssSiteToRedis(redisRssSite);
 
             let data = await FeedHelper.storeFeed(savedRssSite.dataValues, rssFetchData);
             if (data.isFeedsStored) {

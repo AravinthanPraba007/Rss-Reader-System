@@ -1,7 +1,7 @@
 const { RssSite } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
 const FeedParser = require('../Helpers/feedReaderHelper');
-const RedisHelper = require('../Helpers/redisHelper');
+const RssSiteRedisHelper = require('../Redis/rssSiteRedisHelper');
 
 module.exports.getRssSiteFromWeb = async function (rssFeedUrl) {
     try {
@@ -53,7 +53,7 @@ module.exports.getRssSiteDetails = async function (rssId) {
         let response = {
             isRssSiteFetched: false,
         }
-        let redisData = await RedisHelper.getSiteDetails(rssId);
+        let redisData = await RssSiteRedisHelper.getSiteDetailsFromRedis(rssId);
         if (redisData.isSiteDetailsFetched) {
             response.isRssSiteFetched = true;
             response.message = StatusMessage.Rss_Detials_Fetched_Success;
@@ -85,7 +85,7 @@ module.exports.getRssSiteDetails = async function (rssId) {
 
 module.exports.getAvaliableRssSites = async () => {
     try {
-        let redisData = await RedisHelper.getAvailableSites();
+        let redisData = await RssSiteRedisHelper.getAvailableSitesFromRedis();
         if (redisData && redisData.isSiteDetailsFetched) {
             let response = {
                 message: StatusMessage.Available_Rss_Sites_Fetched_Success,

@@ -1,7 +1,7 @@
 const RssSiteService = require('../Services/rssSitesService');
 const StoreRssSiteService = require('../Services/rssSitesStoreService');
 const Boom = require('boom');
-const RedisHelper = require('../Helpers/redisHelper');
+const RssSiteRedisHelper = require('../Redis/rssSiteRedisHelper');
 
 module.exports.getRssSiteFromWeb = async (request, reply) => {
     try {
@@ -74,7 +74,7 @@ module.exports.getAvailableRssSites = async (request, reply) => {
 
 module.exports.getAvailableRssSitesFromRedis = async (request, reply) => {
     try {
-        let data = await RedisHelper.getAvailableSites();
+        let data = await RssSiteRedisHelper.getAvailableSitesFromRedis();
         if (data.isSiteDetailsFetched) {
             let response = reply({ message: data.message, rssSiteList: data.rssSiteList });
             response.code(200);
@@ -94,7 +94,7 @@ module.exports.getAvailableRssSitesFromRedis = async (request, reply) => {
 
 module.exports.storeAvailableRssSitesToRedis = async (request, reply) => {
     try {
-        let data = await RedisHelper.pushAvailableSites();
+        let data = await RssSiteRedisHelper.pushRssSitesToRedis();
         let response = reply({ message: data.message });
         response.code(200);
         return response;
