@@ -6,7 +6,7 @@ const UserHelper = require('../Helpers/userHelper');
 const AuthRouters = require('../Routers/authRouters');
 const RssSubscriptionRouters = require('../Routers/rssSubscriptionRouters');
 const RssSiteRouters = require('../Routers/rssSiteRouter');
-const RssSiteFeedRouters = require('../Routers/rssSiteFeedRouters');
+const FeedsRouters = require('../Routers/feedsRouters');
 
 const BullUi = require('../Jobs/bullUi');
 const { triggerFeedFetchJob } = require('../Jobs/queues/fetchFeedsQueue');
@@ -70,7 +70,7 @@ const serverInit = async () => {
   addRoutersToServer(AuthRouters, "Auth Routers");
   addRoutersToServer(RssSubscriptionRouters, "RssSubscription Routers");
   addRoutersToServer(RssSiteRouters, "RssSite Routers");
-  addRoutersToServer(RssSiteFeedRouters, "RssSiteFeed Routers");
+  addRoutersToServer(FeedsRouters, "Feed Routers");
 
   await server.start();
   console.log(`Server running at: ${server.info.uri}`);

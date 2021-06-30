@@ -3,27 +3,6 @@ const StatusMessage = require('../Constants/statusMessages');
 const FeedParser = require('../Helpers/feedReaderHelper');
 const RedisHelper = require('../Helpers/redisHelper');
 
-module.exports.getAvaliableRssSites = async () => {
-    try {
-        let redisData = await RedisHelper.getAvailableSites();
-        if (redisData && redisData.isSiteDetailsFetched) {
-            let response = {
-                message: StatusMessage.Available_Rss_Sites_Fetched_Success,
-                rssSubscriptions: redisData.rssSiteList
-            };
-            return response;
-        }
-        let rssSiteList = await RssSite.findAll();
-        let response = {
-            message: StatusMessage.Available_Rss_Sites_Fetched_Success,
-            rssSubscriptions: rssSiteList
-        };
-        return response;
-    } catch (error) {
-        return error;
-    }
-}
-
 module.exports.getRssSiteFromWeb = async function (rssFeedUrl) {
     try {
         let response = {
@@ -36,6 +15,28 @@ module.exports.getRssSiteFromWeb = async function (rssFeedUrl) {
             response.isRssSiteFetched = true;
             response.message = StatusMessage.Rss_Detials_Fetched_Success;
             response.rssSite = fetchedFeeds;
+            return response;
+        }
+        else {
+            response.message = data.message;
+            return response;
+        }
+    } catch (error) {
+        return error;
+    }
+}
+
+module.exports.getFullRssSiteDetailsFromWeb = async function (rssFeedUrl) {
+    try {
+        let response = {
+            isRssSiteFetched: false,
+        }
+        let fetchedFeeds;
+        let data = await FeedParser.rssParser(rssFeedUrl);
+        if (data.statusCode && data.statusCode === 200) {
+            response.isRssSiteFetched = true;
+            response.message = StatusMessage.Rss_Detials_Fetched_Success;
+            response.rssSite = data;
             return response;
         }
         else {
@@ -82,23 +83,22 @@ module.exports.getRssSiteDetails = async function (rssId) {
     }
 }
 
-module.exports.getFullRssSiteDetailsFromWeb = async function (rssFeedUrl) {
+module.exports.getAvaliableRssSites = async () => {
     try {
+        let redisData = await RedisHelper.getAvailableSites();
+        if (redisData && redisData.isSiteDetailsFetched) {
+            let response = {
+                message: StatusMessage.Available_Rss_Sites_Fetched_Success,
+                rssSubscriptions: redisData.rssSiteList
+            };
+            return response;
+        }
+        let rssSiteList = await RssSite.findAll();
         let response = {
-            isRssSiteFetched: false,
-        }
-        let fetchedFeeds;
-        let data = await FeedParser.rssParser(rssFeedUrl);
-        if (data.statusCode && data.statusCode === 200) {
-            response.isRssSiteFetched = true;
-            response.message = StatusMessage.Rss_Detials_Fetched_Success;
-            response.rssSite = data;
-            return response;
-        }
-        else {
-            response.message = data.message;
-            return response;
-        }
+            message: StatusMessage.Available_Rss_Sites_Fetched_Success,
+            rssSubscriptions: rssSiteList
+        };
+        return response;
     } catch (error) {
         return error;
     }

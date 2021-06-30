@@ -1,7 +1,7 @@
 //Need to remove this file
 const FeedParser = require('../Helpers/feedReaderHelper');
 const { RssSite, RssFeed } = require('../../models');
-const FeedKibanaHelper = require('../ElasticSearch/feedHelper');
+const FeedsElasticSearchHelper = require('../ElasticSearch/feedsESHelper');
 
 module.exports.fetchAndStoreFeed = async function (rssFeedUrl) {
 
@@ -65,7 +65,7 @@ module.exports.fetchAndStoreFeed = async function (rssFeedUrl) {
                         feedsdata.push(feed.dataValues);
                     });
                     // console.log(feedsdata);
-                    await FeedKibanaHelper.pushFeedsToKibana(feedsdata);
+                    await FeedsElasticSearchHelper.pushFeedsToES(feedsdata);
                     console.log("--------------------------------");
                     const latestFeedFetchedAt = new Date();
                     const lastestPubDate = rssHeadDetails.pubDate;

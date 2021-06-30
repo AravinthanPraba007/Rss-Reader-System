@@ -1,7 +1,7 @@
 const FeedParser = require('./feedReaderHelper');
 const { RssSite, RssFeed } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
-const FeedKibanaHelper = require('../ElasticSearch/feedHelper');
+const FeedsElasticSearchHelper = require('../ElasticSearch/feedsESHelper');
 
 module.exports.storeFeed = async function (rssSite, rssFetchData) {
     try {
@@ -58,7 +58,7 @@ module.exports.storeFeed = async function (rssSite, rssFetchData) {
                         feedsdata.push(feed.dataValues);
                     });
                     // console.log(feedsdata);
-                    await FeedKibanaHelper.pushFeedsToKibana(feedsdata);
+                    await FeedsElasticSearchHelper.pushFeedsToES(feedsdata);
                     console.log("--------------------------------");
                     const latestFeedFetchedAt = new Date();
                     const lastestPubDate = rssHeadDetails.pubDate;

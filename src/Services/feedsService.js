@@ -2,7 +2,7 @@ const FeedParser = require('../Helpers/feedReaderHelper');
 const { RssSite, RssFeed } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
 
-module.exports.getRssSiteFeeds = async function (rssFeedUrl) {
+module.exports.getRssSiteFeedsByUrl = async function (rssFeedUrl) {
     try {
         let response = {
             isFeedsFetched: false,
@@ -56,3 +56,19 @@ module.exports.getRssSiteFeedsFromWeb = async function (rssFeedUrl) {
     }
 }
 
+module.exports.getAvailableFeeds = async function () {
+    try {
+        let response = {
+            isFeedsFetched: false,
+            feeds: []
+        };
+        let feeds = await RssFeed.findAll();
+        response.isFeedsFetched = true;
+        response.feeds = feeds;
+        response.message = StatusMessage.Site_Feeds_Fetched_Success;
+        return response;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}

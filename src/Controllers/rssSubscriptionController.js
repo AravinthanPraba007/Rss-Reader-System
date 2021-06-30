@@ -1,5 +1,4 @@
-const AddRssSubscription = require('../Services/rssSubscriptionService');
-const RssSubscriptionList = require('../Services/rssSubscriptionListService');
+const RssSubscriptionService = require('../Services/rssSubscriptionService');
 const JwtHelper = require('../Helpers/jwtTokenHelper');
 const Boom = require('boom');
 
@@ -11,7 +10,7 @@ module.exports.addRssSubscriptionByUrl = async (request, reply) => {
             rssFeedUrl: request.payload.rssFeedUrl,
             userId: decoded.userId
         }
-        let data = await AddRssSubscription.addRssSubcriptionByUrl(user);
+        let data = await RssSubscriptionService.addRssSubcriptionByUrl(user);
         if (data.isSubscriptionSuccess) {
             let response = reply({ message: data.message });
             response.code(200);
@@ -34,7 +33,7 @@ module.exports.getRssSubscriptionList = async (request, reply) => {
         const user = {
             userId: decoded.userId
         }
-        let data = await RssSubscriptionList.getRssSubscriptionList(user);
+        let data = await RssSubscriptionService.getRssSubscriptionList(user);
         let response = reply({ message: data.message, subcriptionList: data.rssSubscriptions });
         response.code(200);
         return response;
@@ -53,7 +52,7 @@ module.exports.manageRssSubscription = async (request, reply) => {
             userId: decoded.userId,
             action: request.payload.action
         }
-        let data = await AddRssSubscription.manageRssSubcription(user);
+        let data = await RssSubscriptionService.manageRssSubcription(user);
         if (data.isActionSuccess) {
             let response = reply({ message: data.message });
             response.code(200);

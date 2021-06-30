@@ -1,8 +1,31 @@
-const FeedParser = require('../Helpers/feedReaderHelper');
-const { RssSite, RssFeed } = require('../../models');
-const FeedFetchAndStoreHelper = require('../Helpers/feedFetchandStoreHelper');
+const { RssFeed } = require('../../models');
 const StatusMessage = require('../Constants/statusMessages');
+const FeedsElasticSearchHelper = require('../ElasticSearch/feedsESHelper');
+
 const RssSiteHelper = require('../Helpers/rssSiteHelper');
+
+module.exports.storeFeedsToElasticSearch = async function () {
+    try {
+        let response = {
+            isFeedsStored: false
+        };
+        let feeds = [];
+        let feedsdata = [];
+        feeds = await RssFeed.findAll();
+        feeds.forEach(feed => {
+            feedsdata.push(feed.dataValues);
+        });
+        // console.log(feedsdata);
+        await FeedsElasticSearchHelper.pushFeedsToES(feedsdata);
+        response.isFeedsStored = true;
+        response.message = StatusMessage.Site_Feeds_Fetched_Success;
+        return response;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
 
 module.exports.storeRssSiteFeeds = async function (rssFeedUrl) {
     try {

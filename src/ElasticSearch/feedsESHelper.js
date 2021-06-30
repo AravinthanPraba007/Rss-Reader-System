@@ -1,6 +1,6 @@
-const FeedIndex = require('./feedIndex');
+const RssFeedsIndex = require('./rssfeedsIndex');
 
-module.exports.pushFeedsToKibana = async function (dataBody) {
+module.exports.pushFeedsToES = async function (dataBody) {
     let bulkData = [];
     dataBody.forEach((data) => {
         if (data.id) {
@@ -9,16 +9,16 @@ module.exports.pushFeedsToKibana = async function (dataBody) {
         }
     });
     if(bulkData.length > 0)
-    await FeedIndex.addFeeds(bulkData);
+    await RssFeedsIndex.addFeeds(bulkData);
 }
 
-module.exports.searchFeeds = async function (searchText) {
+module.exports.searchFeedsFromES = async function (searchText) {
     let result = {
         feeds: [],
         isSearchDone: false
     }
     try {
-        let resultData = await FeedIndex.searchFeed(searchText);
+        let resultData = await RssFeedsIndex.searchFeed(searchText);
         if (resultData.isSearchDone) {
             result.feeds = resultData.data;
             result.isSearchDone = true;

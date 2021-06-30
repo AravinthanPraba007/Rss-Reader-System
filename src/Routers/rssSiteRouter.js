@@ -31,36 +31,6 @@ module.exports = [
     },
     {
         method: 'POST',
-        path: '/getRssSiteFeeds',
-        config: {
-            auth: false,
-            validate: {
-                payload: Joi.object({
-                    rssFeedUrl: Joi.string().uri().required()
-                })
-            },
-            handler: async (request, reply) => {
-                return RssSiteController.getRssSiteFeeds(request, reply);
-            }
-        }
-    },
-    {
-        method: 'POST',
-        path: '/getRssSiteFeedsFromWeb',
-        config: {
-            auth: false,
-            validate: {
-                payload: Joi.object({
-                    rssFeedUrl: Joi.string().uri().required()
-                })
-            },
-            handler: async (request, reply) => {
-                return RssSiteController.getRssSiteFeedsFromWeb(request, reply);
-            }
-        }
-    },
-    {
-        method: 'POST',
         path: '/getRssSiteFromWeb',
         config: {
             auth: false,
@@ -101,33 +71,6 @@ module.exports = [
             },
             handler: async (request, reply) => {
                 return RssSiteController.getFullRssSiteDetailsFromWeb(request, reply);
-            }
-        }
-    },
-    {
-        method: 'POST',
-        path: '/storeRssSiteFeeds',
-        config: {
-            auth: false,
-            validate: {
-                payload: Joi.object({
-                    rssFeedUrl: Joi.string().uri().required()
-                })
-            },
-            handler: async (request, reply) => {
-                return RssSiteController.storeRssSiteFeeds(request, reply);
-            }
-        }
-    },
-    {
-        method: 'GET',
-        path: '/storeFeeds',
-        config: {
-            auth: false,
-            validate: {
-            },
-            handler: async (request, reply) => {
-                return RssSiteController.storeFeeds(request, reply);
             }
         }
     },
